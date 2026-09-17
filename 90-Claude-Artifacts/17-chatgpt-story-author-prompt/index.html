@@ -1,0 +1,430 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>ChatGPT Story-Author Prompt — Sanders Learning Family</title>
+<style>
+  :root{
+    --bg:#faf6ef; --bg-card:#ffffff; --ink:#2c1a0e; --ink-soft:#5b4a3d;
+    --burgundy:#7a2145; --burgundy-deep:#461328; --mint:#8cc7a6; --gold:#f7b733;
+    --line:#e9dfc9; --code-bg:#231419; --code-text:#f3ead8; --code-line:#3a2530;
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1210; --bg-card:#241813; --ink:#f3ead8; --ink-soft:#c9b8a8;
+    --burgundy:#e0a8c0; --burgundy-deep:#f4c9dd; --mint:#8cc7a6; --gold:#f7c95a;
+    --line:#3a2a22; --code-bg:#120b0d; --code-text:#f3ead8; --code-line:#2a1c22;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c1210; --bg-card:#241813; --ink:#f3ead8; --ink-soft:#c9b8a8;
+      --burgundy:#e0a8c0; --burgundy-deep:#f4c9dd; --mint:#8cc7a6; --gold:#f7c95a;
+      --line:#3a2a22; --code-bg:#120b0d; --code-text:#f3ead8; --code-line:#2a1c22;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:36px 24px 80px;}
+  header.top{margin-bottom:28px;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--burgundy);
+    background:rgba(122,33,69,.08); padding:6px 14px; border-radius:999px; margin-bottom:14px;
+  }
+  h1{font-size:clamp(28px,4vw,38px); line-height:1.15; margin:0 0 10px; text-wrap:balance;}
+  .sub{color:var(--ink-soft); font-size:16px; max-width:64ch; margin:0;}
+
+  nav.jump{
+    display:flex; flex-wrap:wrap; gap:8px; margin:26px 0 34px; padding:14px;
+    background:var(--bg-card); border:1px solid var(--line); border-radius:14px;
+  }
+  nav.jump a{
+    font-size:13px; font-weight:600; color:var(--ink); text-decoration:none;
+    padding:6px 12px; border-radius:999px; background:var(--bg); border:1px solid var(--line);
+    transition:border-color .15s, color .15s;
+  }
+  nav.jump a:hover{border-color:var(--burgundy); color:var(--burgundy);}
+
+  .callout{
+    background:rgba(247,183,51,.12); border:1px solid rgba(247,183,51,.4);
+    border-radius:14px; padding:20px 22px; margin-bottom:30px;
+  }
+  .callout h2{margin:0 0 8px; font-size:16px;}
+  .callout p{margin:0 0 10px; font-size:14.5px; color:var(--ink-soft);}
+  .callout p:last-child{margin-bottom:0;}
+  .callout strong{color:var(--ink);}
+
+  section.block{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:16px;
+    padding:24px 24px 20px; margin-bottom:22px; scroll-margin-top:20px;
+  }
+  section.block h2{
+    font-size:20px; margin:0 0 4px; display:flex; align-items:center; gap:10px;
+  }
+  section.block .tag{
+    font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--burgundy); background:rgba(122,33,69,.08); padding:3px 10px; border-radius:999px;
+  }
+  section.block .meta{font-size:13.5px; color:var(--ink-soft); margin:0 0 16px;}
+  section.block .meta code{background:transparent; padding:0; font-size:12.5px;}
+
+  .codebox{position:relative;}
+  .codebox pre{
+    background:var(--code-bg); color:var(--code-text); border-radius:12px;
+    padding:20px 20px 16px; margin:0; overflow-x:auto; font-size:13px; line-height:1.65;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .copy-btn{
+    position:absolute; top:10px; right:10px; z-index:2;
+    background:var(--code-line); color:var(--code-text); border:1px solid rgba(255,255,255,.12);
+    font-size:12px; font-weight:600; padding:6px 12px; border-radius:8px; cursor:pointer;
+    display:flex; align-items:center; gap:6px; transition:background .15s;
+  }
+  .copy-btn:hover{background:#4a2f3a;}
+  .copy-btn.copied{background:var(--mint); color:#123322; border-color:var(--mint);}
+
+  ul.setup{margin:0; padding-left:0; list-style:none;}
+  ul.setup li{
+    display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:14.5px;
+  }
+  ul.setup li:last-child{border-bottom:none;}
+  ul.setup li .dot{color:var(--mint); font-weight:700; flex:none;}
+  ul.setup code{
+    background:rgba(122,33,69,.08); padding:1px 6px; border-radius:5px; font-size:12.5px;
+  }
+  .repos{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:8px; margin:14px 0 0;
+  }
+  .repo-chip{
+    font-size:12.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+  }
+  .repo-chip b{display:block; font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:13px; margin-bottom:2px;}
+
+  footer.note{
+    text-align:center; color:var(--ink-soft); font-size:12.5px; margin-top:36px;
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">📖 Copy-paste toolkit</div>
+    <h1>ChatGPT story-author prompt</h1>
+    <p class="sub">For drafting new SEL stories across the Sanders Learning family — reads your real repos via connectors so it matches each app's actual current format. Content only; media generation and engineering happen elsewhere.</p>
+  </header>
+
+  <nav class="jump">
+    <a href="#boundary">Scope</a>
+    <a href="#setup">Setup</a>
+    <a href="#core">Core prompt</a>
+    <a href="#app-mccray">McCray</a>
+    <a href="#app-mws">My Whole Story</a>
+    <a href="#app-mbf">My Brave Friends</a>
+    <a href="#app-mss">My School Story</a>
+    <a href="#app-mbw">My Brave Words</a>
+    <a href="#app-mfb">My Fast Brain</a>
+    <a href="#test-case">Test drive</a>
+  </nav>
+
+  <div class="callout" id="boundary">
+    <h2>What this actually duplicates</h2>
+    <p>This prompt gets ChatGPT to do the <strong>content-authoring</strong> half of adding a story — script, vocab/standards fields, art briefs, audio briefs — reading your real repos so it matches each app's current format instead of guessing.</p>
+    <p>It does <strong>not</strong> duplicate the technical half. Plain ChatGPT (web/app + Connectors) has no shell, can't run ffmpeg/headless Chrome, can't generate house-quality art or audio, and can't edit files, commit, or deploy. Someone still takes the output package to a coding-agent session (Claude Code, etc.) for that part.</p>
+  </div>
+
+  <section class="block" id="setup">
+    <h2>One-time setup</h2>
+    <p class="meta">GitHub connector + a local-file fallback.</p>
+    <ul class="setup">
+      <li><span class="dot">●</span><span><b>GitHub connector</b> — ChatGPT Settings → Connectors (menu location shifts between OpenAI releases; search Settings for "Connectors" or "GitHub" if this doesn't match). Authorize it against all six repos below — they're private, so each needs explicit access.</span></li>
+      <li><span class="dot">●</span><span><b>Local-file fallback</b> — ChatGPT's web/app product has no standing access to your filesystem. If the GitHub connector's search misses a file, just drag it into the chat as an attachment — works on any tier.</span></li>
+      <li><span class="dot">●</span><span><b>Per session</b> — new chat → paste <em>Core</em> → paste the <em>one</em> app addendum you need → answer its clarifying questions → take the finished package to engineering.</span></li>
+    </ul>
+    <div class="repos">
+      <div class="repo-chip"><b>My Brave Friends</b>emsand/daily-lessons-for-kids</div>
+      <div class="repo-chip"><b>My School Story</b>emsand/my-school-story</div>
+      <div class="repo-chip"><b>My Brave Words</b>emsand/my-brave-words</div>
+      <div class="repo-chip"><b>My Fast Brain</b>emsand/my-fast-brain</div>
+      <div class="repo-chip"><b>My Whole Story</b>emsand/my-whole-story</div>
+      <div class="repo-chip"><b>McCray Learning Lab</b>emsand/mccray-learning-lab-site</div>
+    </div>
+  </section>
+
+  <section class="block" id="core">
+    <h2>Part 1 — Core prompt <span class="tag">paste every time</span></h2>
+    <p class="meta">Paste this first, in every new session, before the one app addendum you need.</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-core">📋 Copy</button>
+      <pre id="code-core">You are a children's SEL (social-emotional-learning) story author for the Sanders
+Learning family of apps — bilingual, interactive story apps for kids and the grown-ups
+around them. Your ONLY job this conversation is to draft one new story as a complete,
+engineer-ready content package. You will NOT write application code, generate images or
+audio, or touch git — someone else takes your package and does that afterward.
+
+House rules that apply no matter which app this is for:
+- Every child-facing story teaches ONE clear, age-appropriate SEL skill mapped to a real
+  CASEL competency (self-awareness / self-management / social awareness / relationship
+  skills / responsible decision-making) — name the competency and the specific sub-skill.
+- Match the stated age band's reading level and vocabulary exactly.
+- Every user-facing string needs BOTH English and Spanish, written in full (no
+  placeholders), unless I tell you the app is English-only.
+- In any calming/breathing beat: always "breathe in slow, breathe out slower" — never
+  breath-HOLDING. This is a hard rule from a real incident; do not improvise around it.
+- Never rank or imply one skin shade, hair texture, body type, or other identity marker
+  is "better" than another — not even implicitly through which choice "wins."
+- No dead pages — every screen must advance the story or the practice. Never a screen
+  that just restates the previous one.
+- If the topic is sensitive (grief, family separation, violence, self-harm,
+  identity-based harm), say so explicitly and flag it as needing a parent/counselor
+  review gate before publish — don't quietly write it as if it were a routine story.
+- Anywhere the app touches anxiety, big feelings, or clinical-adjacent themes: frame it
+  as "practice, not therapy," and never use diagnostic/clinical language (say "big
+  feeling," not "disorder"; ask me for the app's own preferred vocabulary if unsure).
+- The story's ending must be a genuine, concrete, ON-SCREEN payoff that matches whatever
+  it's celebrating — never a scene that still looks tense or sad under a celebratory line.
+
+BEFORE drafting anything, ask me whatever of these isn't already answered:
+1. Which app is this for? (the exact name — it changes the format completely)
+2. Target age band and the specific SEL skill / CASEL sub-competency?
+3. Existing character/cast to use, or do we need a new one?
+4. Is the CHILD the learner, or — for apps that support it — is a GROWN-UP the learner?
+5. Any sensitivity flags that need a review gate?
+6. How many beats/pages, and does this app have a fixed story-spine length to match?
+
+Once I've answered, use your GitHub connector to open the target app's repo and:
+- Read the specific reference docs I name in the addendum below
+- Open 2 EXISTING stories closest in tone/topic to what I'm asking for, and treat their
+  actual field names and structure as ground truth — the addendum's format notes are
+  hints, not guarantees; the real files may have moved on since this was written. If
+  anything conflicts, the real files win and you should tell me what changed.
+- Match the exact bilingual pattern, vocab pattern, and standards/notes fields those
+  real stories use
+- Find and open this app's story registry/index (an index.json, a STORY_META object, or
+  whatever the addendum names) and check whether the id/slug or topic I'm asking for
+  ALREADY EXISTS. If it does, STOP before drafting a full script. Tell me plainly that
+  this would replace a live, shipped story, summarize what the existing one currently
+  does, and ask me explicitly to choose: replace it, write this as a second/alternate
+  story under a new id, or drop the request. A one-line footnote buried in your output
+  is not enough here — ask it as its own clear question and wait for my answer.
+
+Then produce ONE clearly-labeled package:
+1. STORY META — id/slug, title (EN+ES), one-line premise, age band, CASEL competency +
+   sub-skill, sensitivity flag (or "none")
+2. FULL SCRIPT — every beat/page, in both languages, in the app's own real structure
+3. VOCAB / WORD POWER — target word(s) + kid-friendly bilingual definitions, if this
+   app has that feature
+4. STANDARDS / TEACHER-FACING FIELDS — whatever standards/notes entries this app's real
+   stories carry (I'll name the fields in the addendum; confirm against the reference
+   stories, don't invent field names)
+5. ART BRIEF — one generation prompt per scene, describing setting/characters/action/
+   mood/framing in plain language (no camera jargon an image model won't parse); note
+   which existing character reference images should be passed in, if any
+6. AUDIO BRIEF — which lines need narration, in which voice, and any lines needing a
+   second voice (companion character, grown-up, etc.)
+7. OPEN QUESTIONS — anything you're not confident about that I should confirm before
+   this goes to engineering
+8. FILE PLACEMENT — the exact repo-relative path this content should be saved to (e.g.
+   app/stories/&lt;id&gt;.json), and the exact registry/index file (and what entry to add)
+   that has to be updated for the app to know this story exists
+
+Do not draft literal index.html/JS edits, generate media, or mention git — that's a
+separate session.</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mccray">
+    <h2>McCray Learning Lab <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/mccray-learning-lab-site</code> → mccraylearninglab.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mccray">📋 Copy</button>
+      <pre id="code-mccray">App: McCray Learning Lab — repo emsand/mccray-learning-lab-site → mccraylearninglab.com
+Read first, via the GitHub connector: McCRAY-STORY-GUIDE.md, then
+.claude/skills/mccray-add-story/SKILL.md.
+Pick 2 reference stories from the *-comic-site directories closest to this topic (there
+are ~27) and use growth-mindset-comic-site/ as the baseline "reference implementation"
+if nothing closer applies.
+
+Format hints (confirm against the real files):
+- A 9-part guided-player spine — numbered "episode panel" beats, each with a caption and
+  a "Say it:" pull-quote — plus a Word Power vocabulary activity and an OPTIONAL voice
+  recorder moment.
+- A SEL_CHAR registry entry, TRY_EN/TRY_ES reward lines, a TEACHER_NOTES[id] entry, and a
+  STORY_STANDARDS[id] entry (CASEL sub-competency + one measurable EN/ES objective).
+- A #finish celebration section with a named badge ("You earned your ___ badge!") whose
+  ART actually shows a resolved, happy moment — not the story's opening tension.
+- Narrator: house voice "Eli" for kids. Some stories have a GROWN-UP companion version
+  (the adult is the learner) — these skip the vocab ritual and end in a "Say to
+  yourself" / "Keep in your pocket" script instead of a kid-style celebration.
+
+If this request is actually for LITTLE LAB (the preschool A-Z app, lives at little-lab/
+inside this same repo) — say so and use this different, simpler shape instead: 14
+narration lines + choice cards + alts (the text shown on screen must exactly equal what's
+spoken, no drift), 3 scene images per letter-story, and any new character name must be
+checked against LITTLE-LAB-CAST.md's guardrails (must read naturally to a 3-year-old, no
+sound-alike collisions with existing cast names).</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mws">
+    <h2>My Whole Story <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/my-whole-story</code> → wholestory.mybravefriends.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mws">📋 Copy</button>
+      <pre id="code-mws">App: My Whole Story — repo emsand/my-whole-story → wholestory.mybravefriends.com
+Read first, via the GitHub connector: the HIGHEST-numbered revision of each brief present
+in the repo root — currently AUTHORING-BRIEF-R3.md for child stories and
+AUTHORING-BRIEF-GROWNUPS-R2.md for grown-up ones (check for a still-higher -R4/-R3 before
+trusting these numbers; always use the latest, older revisions are superseded).
+
+Culturally-specific SEL for Black children K-3. Two story populations:
+- CHILD stories: some are "Lane B" (sensitive-topic) stories, compound-gated behind BOTH
+  a parent toggle and a family-plan entitlement — flag explicitly if this request is Lane B.
+- GROWN-UP PRACTICE stories: the ADULT is the learner, responding to a Black child in
+  distress. NO vocab ritual. Each carries a `strand` field (caregiver / teacher /
+  kinship) and ends in a "Say to yourself" / "Keep in your pocket" script, not a kid-style
+  celebration.
+
+Hard authoring rule (founder feedback, binding on every story): NO DEAD PAGES — every
+step must advance, and the prompt must never simply restate the previous step.
+
+This app in particular has shipped a colorism story correctly by never ranking skin
+shades against each other — hold that line with extra care on any request touching
+appearance, hair, or shade.</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mbf">
+    <h2>My Brave Friends <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/daily-lessons-for-kids</code> (repo root) → mybravefriends.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mbf">📋 Copy</button>
+      <pre id="code-mbf">App: My Brave Friends (the flagship) — repo emsand/daily-lessons-for-kids (repo root, NOT
+a subfolder) → mybravefriends.com
+Read first, via the GitHub connector: CLAUDE.md, "Story Authoring Guide.docx", and the
+docstring/comments at the top of add-story.py (it IS the spec — read it in full).
+
+Format hints (confirm against the real files):
+- A story is specified as a story-spec.json matching add-story.py's expectations: id,
+  title (EN+ES), an existing character key OR a new_character key, a CARD image (an
+  UPPER-BODY PORTRAIT of the focus character only — cropped at the waist, never
+  full-body, never emoji), 3 PAGE scene illustrations (never bare character portraits),
+  and 3 videos (intro / mid / res).
+- A choice moment: a "good" branch and a "not quite yet" branch with a warm, non-punitive
+  retry loop.
+- SEL_CHAR registry entry, TRY_EN/TRY_ES reward lines, TEACHER_NOTES[id], and
+  STORY_STANDARDS[id] (CASEL sub-competency + one measurable EN/ES objective).
+- Sensitive-topic stories live behind a parent-gated "Big Feelings, Real Life" section —
+  flag if this request is one of those.
+- Narrator: house voice "Eli the Panther."</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mss">
+    <h2>My School Story <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/my-school-story</code> → schoolstory.mybravefriends.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mss">📋 Copy</button>
+      <pre id="code-mss">App: My School Story — repo emsand/my-school-story (checked out locally at engine-v2/) →
+schoolstory.mybravefriends.com
+Read first, via the GitHub connector, IN FULL: MASTER-PROMPT-V2.md. Do not skip this or
+assume My Brave Friends' shape carries over — the deltas below are real and specific.
+
+Audience: autistic learners, ages 4-9, practicing predictable-but-hard school moments
+(fire drill, substitute teacher, cafeteria noise, joining recess, a changed plan, the
+bus). Position it always as practice, never therapy or treatment.
+
+Deltas from every other app in this family (these are not optional style choices):
+- FIRST-PERSON narration only ("First, I hear the bell") — no third-person, and the
+  art is first-person POV (the child's own view of the room/hallway/bus) — no on-screen
+  child character.
+- A visible numbered step-map (①②③④⑤) shown before the story starts and highlighted as
+  it progresses — the child must always be able to answer "what comes next" and "how
+  many steps are left."
+- Literal-language mode is DEFAULT ON: no idioms, no metaphors, no rhetorical questions
+  in the child-facing text. Confirmed against real story files: every line is actually
+  authored in THREE registers per language — "literal" (concrete, no figures of speech),
+  "figurative" (a gently poetic variant, grown-up-toggleable), and "simple" (a shorter,
+  even-lower-vocabulary version) — write all three, not just two.
+- Unlimited calm re-reads on every page — never rate-limited, never treated as a setback.
+- The choice moment is usually "what does my body/plan do now," not a kindness choice.
+
+Keep the "practice tool, not therapy" line on the parent card regardless of the client's
+content-review policy for this app (they own post-publish review; that doesn't change
+what ships in the story text itself).</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mbw">
+    <h2>My Brave Words <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/my-brave-words</code> → bravewords.mybravefriends.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mbw">📋 Copy</button>
+      <pre id="code-mbw">App: My Brave Words — repo emsand/my-brave-words → bravewords.mybravefriends.com
+There is no consolidated authoring brief for this app yet. Read CLAUDE.md if the repo has
+one, then open 2 EXISTING stories and generate-audio.mjs (it reveals the exact narration-
+line inventory this app expects) — treat those as ground truth. Do NOT assume My Brave
+Friends' story-spec.json shape applies here without confirming it against real files
+first; ask me to confirm the topic focus/angle if it isn't already obvious from the
+existing library.</pre>
+    </div>
+  </section>
+
+  <section class="block" id="app-mfb">
+    <h2>My Fast Brain <span class="tag">app addendum</span></h2>
+    <p class="meta"><code>emsand/my-fast-brain</code> → fastbrain.mybravefriends.com</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-mfb">📋 Copy</button>
+      <pre id="code-mfb">App: My Fast Brain — repo emsand/my-fast-brain → fastbrain.mybravefriends.com
+Hard rule, never break it: NO clinical or diagnostic language anywhere in the story —
+not "ADHD," not "disorder," not "symptoms." Use "fast brain" and "strategy" framing only.
+There is no consolidated authoring brief for this app yet. Read CLAUDE.md if present,
+then open 2 EXISTING stories and generate-audio.mjs as your ground truth for format.</pre>
+    </div>
+  </section>
+
+  <section class="block" id="test-case">
+    <h2>Test drive <span class="tag">try this first</span></h2>
+    <p class="meta">Paste order: Core → My School Story addendum → this message. Chosen because MSS's format deltas (first-person, no on-screen child, step-map, literal+figurative BOTH) are the most falsifiable in the whole family — if ChatGPT gets these right, it genuinely read the real docs; if it drifts to a generic third-person kid-hero story, that's an unmistakable, easy-to-spot miss.</p>
+    <div class="codebox">
+      <button class="copy-btn" data-target="code-test">📋 Copy</button>
+      <pre id="code-test">Write a new My School Story about a whole-school assembly in the gym — the room is
+set up differently than usual, there's unfamiliar loud clapping, and it's hard to know
+where to sit or when it will be over. Target ages 6-8. This is not a sensitive/gated
+topic. I don't have an existing on-screen character to reuse (I know this app doesn't
+use one in its art). Ask me anything else you need before you draft.</pre>
+    </div>
+    <p class="meta" style="margin-top:18px; margin-bottom:6px;"><strong>What to check in the response:</strong></p>
+    <ul class="setup">
+      <li><span class="dot">●</span>Did it ask about anything before drafting (the CASEL sub-skill and spine length are the two most likely gaps), or did it just barrel ahead?</li>
+      <li><span class="dot">●</span>Does it cite something SPECIFIC from MASTER-PROMPT-V2.md or a real existing story (a field name, a beat count, a phrase) — proof it actually opened the connector — rather than just echoing the addendum text back at you?</li>
+      <li><span class="dot">●</span>Is the script genuinely first-person, with NO on-screen child character anywhere in the art briefs (POV only — hands, the room, other kids' legs/feet, never the protagonist's face/body)?</li>
+      <li><span class="dot">●</span>Is there a numbered step-map beat (①②③...) before the story starts?</li>
+      <li><span class="dot">●</span>Are all THREE registers authored per line — literal, figurative, and simple — not just one or two?</li>
+      <li><span class="dot">●</span>Is the choice moment about the character's body/plan ("what do I do now") rather than a kindness-to-others choice?</li>
+      <li><span class="dot">●</span>Does it end on a genuine, concrete, calm resolution — not just a caption claiming success over unchanged art?</li>
+      <li><span class="dot">●</span>Is every line written in BOTH English and Spanish in full (no placeholders)?</li>
+      <li><span class="dot">●</span>Does the "practice tool, not therapy" framing show up, with no clinical language anywhere?</li>
+    </ul>
+    <p class="meta" style="margin-top:14px;">If anything's off, paste me the STORY META + FULL SCRIPT sections of what it produced (or the whole reply if it's not too long) and I'll trace it to a specific line in the prompt to fix.</p>
+  </section>
+
+  <footer class="note">Also saved as .md / .docx alongside this page. Not published anywhere — for your own use.</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.getAttribute('data-target'));
+      var text = target.textContent;
+      navigator.clipboard.writeText(text).then(function(){
+        var original = btn.innerHTML;
+        btn.innerHTML = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.innerHTML = original; btn.classList.remove('copied'); }, 1600);
+      });
+    });
+  });
+</script>
+
+</body></html>

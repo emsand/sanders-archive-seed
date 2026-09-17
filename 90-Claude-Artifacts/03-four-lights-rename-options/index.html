@@ -1,0 +1,130 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Four Lights Rename Options</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&display=swap');
+
+  :root{
+    --stage:#071316; --stage-line:#132226;
+    --panel:#153a41; --panel-2:#245057; --deep:#0a2226;
+    --cream:#f2ece0; --muted:#a9bfbd; --gold:#ffcf8a; --gold-deep:#e8a94f;
+    --label:#6f8f8c;
+    --radius:18px; --shadow:0 8px 0 rgba(0,0,0,.28), 0 14px 30px rgba(0,0,0,.45);
+    --maxw:760px;
+    --font:"Trebuchet MS","Segoe UI",system-ui,-apple-system,sans-serif;
+    --display:"Fredoka","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; }
+  body{
+    background:var(--stage); color:var(--cream); font-family:var(--font);
+    padding-block: clamp(28px,5vw,52px);
+  }
+  #stage{ max-width:var(--maxw); margin:0 auto; padding-inline:16px; }
+
+  .intro{ margin-bottom:clamp(28px,5vw,44px); }
+  .intro .kicker{ font-family:var(--display); font-weight:700; font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--label); margin:0 0 .5rem; }
+  .intro h1{ font-family:var(--display); font-size:clamp(1.5rem,3.4vw,1.9rem); margin:0 0 .5rem; color:var(--cream); text-wrap:balance; }
+  .intro p{ margin:0; color:var(--label); font-size:.98rem; line-height:1.55; max-width:58ch; }
+
+  .option{ margin-bottom:clamp(30px,5vw,46px); }
+  .option:last-child{ margin-bottom:0; }
+  .option-label{ display:flex; align-items:baseline; gap:.6rem; margin-bottom:.85rem; }
+  .option-label .num{ font-family:var(--display); font-weight:700; font-size:.78rem; color:var(--stage);
+    background:var(--gold); border-radius:999px; width:1.7em; height:1.7em; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .option-label .name{ font-family:var(--display); font-weight:700; font-size:1.15rem; color:var(--gold); }
+
+  /* ---- reproduction of the live fourlights.netlify.app hero, tokens/markup unchanged ---- */
+  .hero{ background:radial-gradient(ellipse 620px 420px at 22% 15%, rgba(255,207,138,.16) 0%, rgba(255,207,138,0) 60%),
+      linear-gradient(150deg, var(--panel) 0%, var(--deep) 100%);
+    border:1px solid var(--panel-2); color:var(--cream);
+    border-radius:26px; padding:clamp(1.6rem,4vw,2.4rem) clamp(1.2rem,4vw,2rem); box-shadow:var(--shadow); }
+  .hero .brandline{ display:flex; align-items:center; gap:12px; margin-bottom:1.4rem; }
+  .hero .brandline .mark{ width:38px; height:38px; flex:none; display:block; }
+  .hero .brandline .t{ line-height:1.05; }
+  .hero .brandline .t .a{ font-family:var(--display); font-size:.78rem; font-weight:600; color:var(--muted); }
+  .hero .brandline .t .b{ font-family:var(--display); font-size:1.28rem; font-weight:700; color:var(--cream); }
+  .hero .eyebrow{ font-family:var(--display); font-weight:700; font-size:.8rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 .5rem; }
+  .hero h2{ font-family:var(--display); font-size:clamp(1.5rem,3.6vw,1.85rem); margin:0 0 .6rem; line-height:1.14; color:var(--cream); text-wrap:balance; }
+  .hero p.dek{ font-size:.98rem; line-height:1.55; color:var(--muted); max-width:62ch; margin:0 0 1.1rem; }
+  .hero .stats{ display:flex; gap:1.6rem; flex-wrap:wrap; font-family:var(--display); font-size:.88rem; color:var(--muted); }
+  .hero .stats b{ display:block; font-size:1.2rem; color:var(--gold); }
+
+  .foot{ margin-top:clamp(30px,5vw,46px); padding-top:1.4rem; border-top:1px solid var(--stage-line); }
+  .foot p{ margin:0; color:var(--label); font-size:.86rem; line-height:1.6; max-width:60ch; }
+  .foot code{ background:var(--stage-line); padding:.1em .4em; border-radius:5px; font-size:.86em; }
+</style>
+
+<div id="stage">
+
+  <div class="intro">
+    <p class="kicker">Rename mockup &middot; fourlights.netlify.app hero</p>
+    <h1>Three names, same hero</h1>
+    <p>The live room card and body copy, unchanged &mdash; only the brand lockup and headline swapped per option, so the comparison is apples to apples.</p>
+  </div>
+
+  <div class="option">
+    <div class="option-label"><span class="num">1</span><span class="name">The Same Light</span></div>
+    <section class="hero">
+      <div class="brandline">
+        <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="23" r="8" fill="none" stroke="#f7b733" stroke-width="2"/>
+          <rect x="17" y="31" width="6" height="3" rx="1.5" fill="#f7b733"/>
+          <circle cx="17.3" cy="21" r="2.3" fill="#f7b733"/><circle cx="22.7" cy="21" r="2.3" fill="#f7b733"/>
+          <path d="M15 22.3 L20 27 L25 22.3 Z" fill="#f7b733"/>
+        </svg>
+        <div class="t"><div class="a">Interactive self-regulation comics</div><div class="b">The Same Light</div></div>
+      </div>
+      <p class="eyebrow">One story per self-regulation skill</p>
+      <h2>Every inner world teaches the same thing: the light was already yours.</h2>
+      <p class="dek">Ten worlds guided by Nova, each built around a different skill: calm, patience, courage, channeled energy, anger regulation, stopping without losing your place, finding a feeling that doesn&rsquo;t have a name yet, trying again, holding an impulse, and holding two true things at once. And all ten are here &mdash; The Quiet Deep, The Still Garden, The Lantern Path, The Kite Sky, The Ironlight, The Keeping Room, Where It Lives, The Tangle, The Still Water, and The Almost.</p>
+      <div class="stats"><span><b>10</b>stories live</span><span><b>0</b>accounts, ads, or tracking</span></div>
+    </section>
+  </div>
+
+  <div class="option">
+    <div class="option-label"><span class="num">2</span><span class="name">The Long Pause</span></div>
+    <section class="hero">
+      <div class="brandline">
+        <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="23" r="8" fill="none" stroke="#f7b733" stroke-width="2"/>
+          <rect x="17" y="31" width="6" height="3" rx="1.5" fill="#f7b733"/>
+          <circle cx="17.3" cy="21" r="2.3" fill="#f7b733"/><circle cx="22.7" cy="21" r="2.3" fill="#f7b733"/>
+          <path d="M15 22.3 L20 27 L25 22.3 Z" fill="#f7b733"/>
+        </svg>
+        <div class="t"><div class="a">Interactive self-regulation comics</div><div class="b">The Long Pause</div></div>
+      </div>
+      <p class="eyebrow">One pause, ten skills</p>
+      <h2>Every inner world starts in the same place: the pause before you react.</h2>
+      <p class="dek">Ten worlds guided by Nova, each one lives inside a different pause: calm, patience, courage, channeled energy, anger regulation, stopping without losing your place, finding a feeling that doesn&rsquo;t have a name yet, trying again, holding an impulse, and holding two true things at once. And all ten are here &mdash; The Quiet Deep, The Still Garden, The Lantern Path, The Kite Sky, The Ironlight, The Keeping Room, Where It Lives, The Tangle, The Still Water, and The Almost.</p>
+      <div class="stats"><span><b>10</b>stories live</span><span><b>0</b>accounts, ads, or tracking</span></div>
+    </section>
+  </div>
+
+  <div class="option">
+    <div class="option-label"><span class="num">3</span><span class="name">The Light Inside</span></div>
+    <section class="hero">
+      <div class="brandline">
+        <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="20" cy="23" r="8" fill="none" stroke="#f7b733" stroke-width="2"/>
+          <rect x="17" y="31" width="6" height="3" rx="1.5" fill="#f7b733"/>
+          <circle cx="17.3" cy="21" r="2.3" fill="#f7b733"/><circle cx="22.7" cy="21" r="2.3" fill="#f7b733"/>
+          <path d="M15 22.3 L20 27 L25 22.3 Z" fill="#f7b733"/>
+        </svg>
+        <div class="t"><div class="a">Interactive self-regulation comics</div><div class="b">The Light Inside</div></div>
+      </div>
+      <p class="eyebrow">One story per self-regulation skill</p>
+      <h2>Every inner world teaches the same thing: the light was already inside you.</h2>
+      <p class="dek">Ten worlds guided by Nova, each built around a different skill: calm, patience, courage, channeled energy, anger regulation, stopping without losing your place, finding a feeling that doesn&rsquo;t have a name yet, trying again, holding an impulse, and holding two true things at once. And all ten are here &mdash; The Quiet Deep, The Still Garden, The Lantern Path, The Kite Sky, The Ironlight, The Keeping Room, Where It Lives, The Tangle, The Still Water, and The Almost.</p>
+      <div class="stats"><span><b>10</b>stories live</span><span><b>0</b>accounts, ads, or tracking</span></div>
+    </section>
+  </div>
+
+  <div class="foot">
+    <p>Same brand mark for all three &mdash; the sparkle-in-a-bulb glyph was already built as a generic "light" symbol, not a literal 4, so it carries over unchanged under any of these names. Body copy (world list, stats) is identical across options; only the brand lockup and headline change, for a fair side-by-side.</p>
+  </div>
+
+</div>
+
+</body></html>

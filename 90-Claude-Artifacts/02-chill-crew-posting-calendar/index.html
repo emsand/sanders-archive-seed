@@ -1,0 +1,621 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chill Crew Posting Calendar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #efeee9;
+    --bg-raised: #f8f7f3;
+    --ink: #1c1b18;
+    --ink-dim: #57544c;
+    --ink-faint: #8b877c;
+    --line: #d9d5cb;
+    --line-soft: #e6e2d8;
+    --fire: #e8461b;
+    --fire-bg: #fbe4da;
+    --lightning: #7b3fe4;
+    --lightning-bg: #e9e0fb;
+    --stone: #5c6b78;
+    --stone-bg: #e2e7ea;
+    --mist: #4f7d9e;
+    --mist-bg: #dfeaf1;
+    --warn: #a8710a;
+    --warn-bg: #f6e6c9;
+    --today-ring: #1c1b18;
+    --card-shadow: 0 1px 0 rgba(28,27,24,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #14151a;
+      --bg-raised: #1b1c22;
+      --ink: #eeece5;
+      --ink-dim: #a9a69d;
+      --ink-faint: #74716a;
+      --line: #313239;
+      --line-soft: #24252b;
+      --fire: #ff7248;
+      --fire-bg: #3a2119;
+      --lightning: #b08bff;
+      --lightning-bg: #2c2340;
+      --stone: #9db0bd;
+      --stone-bg: #232b31;
+      --mist: #8fc0e4;
+      --mist-bg: #1c2c37;
+      --warn: #e8b34a;
+      --warn-bg: #3a2d10;
+      --today-ring: #eeece5;
+      --card-shadow: none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #14151a;
+    --bg-raised: #1b1c22;
+    --ink: #eeece5;
+    --ink-dim: #a9a69d;
+    --ink-faint: #74716a;
+    --line: #313239;
+    --line-soft: #24252b;
+    --fire: #ff7248;
+    --fire-bg: #3a2119;
+    --lightning: #b08bff;
+    --lightning-bg: #2c2340;
+    --stone: #9db0bd;
+    --stone-bg: #232b31;
+    --mist: #8fc0e4;
+    --mist-bg: #1c2c37;
+    --warn: #e8b34a;
+    --warn-bg: #3a2d10;
+    --today-ring: #eeece5;
+    --card-shadow: none;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 14px;
+    padding-inline: 20px;
+    padding-block: 28px 80px;
+  }
+  .wrap{ max-width: 920px; margin: 0 auto; }
+
+  h1,h2,h3{ font-family: 'Big Shoulders Display', system-ui, sans-serif; text-wrap: balance; margin: 0; }
+  .mono{ font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+  header.masthead{
+    display: flex; flex-direction: column; gap: 14px;
+    padding-bottom: 22px; border-bottom: 3px solid var(--ink);
+    margin-bottom: 22px;
+  }
+  .eyebrow{
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-dim);
+  }
+  h1.title{ font-size: clamp(34px, 7vw, 56px); font-weight: 800; line-height: 0.98; letter-spacing: -0.01em; }
+  .subtitle{ color: var(--ink-dim); font-size: 16px; max-width: 62ch; }
+  .facts{ display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 4px; }
+  .fact{ display: flex; flex-direction: column; gap: 2px; }
+  .fact .k{ font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); font-family: 'IBM Plex Mono', monospace; }
+  .fact .v{ font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 14px; }
+
+  .toolbar{
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg); padding-block: 10px 14px;
+    border-bottom: 1px solid var(--line); margin-bottom: 24px;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .chip{
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 500;
+    padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--bg-raised); color: var(--ink-dim); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color .12s, color .12s;
+  }
+  .chip .dot{ width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .8; }
+  .chip[aria-pressed="true"]{ border-color: var(--ink); color: var(--ink); background: var(--bg); }
+  .chip:focus-visible{ outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .callout{
+    border: 1px solid var(--warn); background: var(--warn-bg);
+    border-radius: 10px; padding: 16px 18px; margin-bottom: 28px;
+  }
+  .callout h2{ font-size: 19px; font-weight: 700; color: var(--warn); margin-bottom: 8px; }
+  .callout ol{ margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .callout li{ font-size: 14.5px; line-height: 1.5; }
+  .callout li b{ font-weight: 600; }
+
+  details.decisions{
+    border: 1px solid var(--line); border-radius: 10px; margin-bottom: 36px; background: var(--bg-raised);
+  }
+  details.decisions summary{
+    padding: 13px 18px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-dim);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  details.decisions summary::-webkit-details-marker{ display:none; }
+  details.decisions summary:after{ content: '+'; font-size: 16px; }
+  details.decisions[open] summary:after{ content: '–'; }
+  details.decisions .body{ padding: 0 18px 16px; display: flex; flex-direction: column; gap: 10px; }
+  details.decisions .body p{ margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-dim); }
+  details.decisions .body b{ color: var(--ink); }
+
+  .week{ margin-bottom: 6px; }
+  .week-head{
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding-block: 10px 6px; border-bottom: 2px solid var(--ink);
+    margin-top: 30px; margin-bottom: 14px;
+  }
+  .week-head .wk-label{ font-size: 22px; font-weight: 700; }
+  .week-head .wk-range{ font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink-faint); }
+  .milestone-badge{
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px; font-weight: 600;
+  }
+
+  .day-row{ display: grid; grid-template-columns: 68px 1fr; gap: 14px; padding-block: 12px; border-bottom: 1px solid var(--line-soft); }
+  .day-row:last-child{ border-bottom: none; }
+  .day-rail{ display: flex; flex-direction: column; align-items: flex-start; padding-top: 3px; }
+  .day-rail .dow{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .day-rail .dnum{ font-family: 'Big Shoulders Display', sans-serif; font-size: 30px; font-weight: 700; line-height: 1; }
+  .day-rail .mon{ font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint); }
+  .today-flag{
+    margin-top: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .06em; padding: 2px 6px; border-radius: 4px; background: var(--ink); color: var(--bg);
+  }
+
+  .posts{ display: flex; flex-direction: column; gap: 8px; }
+
+  .post{
+    border: 1px solid var(--line); border-left-width: 4px; border-radius: 8px;
+    background: var(--bg-raised); box-shadow: var(--card-shadow);
+    padding: 11px 14px;
+  }
+  .post-head{ display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .plat{
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .03em;
+    padding: 2px 7px; border-radius: 4px; background: var(--line-soft); color: var(--ink-dim);
+  }
+  .headline{ font-weight: 600; font-size: 15px; margin-top: 5px; line-height: 1.35; }
+  .subline{ font-size: 13px; color: var(--ink-dim); margin-top: 2px; line-height: 1.4; }
+
+  .post details{ margin-top: 8px; }
+  .post details summary{
+    cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px;
+    color: var(--ink-faint); list-style: none;
+  }
+  .post details summary::-webkit-details-marker{ display:none; }
+  .post details summary:before{ content: '▸ '; }
+  .post details[open] summary:before{ content: '▾ '; }
+  .copy-block{ margin-top: 8px; padding: 10px 12px; background: var(--bg); border: 1px solid var(--line-soft); border-radius: 6px; }
+  .copy-block .row{ font-size: 13.5px; line-height: 1.55; white-space: pre-line; margin-bottom: 8px; }
+  .copy-block .row:last-child{ margin-bottom: 0; }
+  .copy-block .label{ font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); display: block; margin-bottom: 3px; }
+  .dl-link{ display: inline-flex; align-items: center; gap: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; margin-top: 8px; }
+  .dl-link:hover{ opacity: .7; }
+
+  .post[data-cat="episode"]{ border-left-color: var(--fire); }
+  .post[data-cat="episode"] .plat.accent{ background: var(--fire-bg); color: var(--fire); }
+  .post[data-cat="short"]{ border-left-color: var(--lightning); }
+  .post[data-cat="short"] .plat.accent{ background: var(--lightning-bg); color: var(--lightning); }
+  .post[data-cat="charcard"]{ border-left-color: var(--stone); }
+  .post[data-cat="charcard"] .plat.accent{ background: var(--stone-bg); color: var(--stone); }
+  .post[data-cat="community"]{ border-left-color: var(--mist); }
+  .post[data-cat="community"] .plat.accent{ background: var(--mist-bg); color: var(--mist); }
+  .post[data-cat="support"]{ border-left-color: var(--line); }
+  .post[data-cat="ops"]{ border-left-color: var(--warn); }
+  .post[data-cat="ops"] .plat.accent{ background: var(--warn-bg); color: var(--warn); }
+
+  .milestone-badge[data-m="premiere"]{ background: var(--fire-bg); color: var(--fire); }
+  .milestone-badge[data-m="finale"]{ background: var(--fire-bg); color: var(--fire); }
+  .milestone-badge[data-m="check"]{ background: var(--warn-bg); color: var(--warn); }
+  .milestone-badge[data-m="teaser"]{ background: var(--lightning-bg); color: var(--lightning); }
+  .milestone-badge[data-m="today"]{ background: var(--ink); color: var(--bg); }
+
+  footer{ margin-top: 50px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; line-height: 1.6; font-family: 'IBM Plex Mono', monospace; }
+  footer a{ color: inherit; }
+
+  [hidden]{ display: none !important; }
+
+  @media (max-width: 480px){
+    .day-row{ grid-template-columns: 52px 1fr; gap: 10px; }
+    .day-rail .dnum{ font-size: 24px; }
+    h1.title{ font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="eyebrow">Season One · McCray Learning Lab</span>
+    <h1 class="title">Chill Crew<br>Posting Calendar</h1>
+    <p class="subtitle">Every scheduled post, caption, hashtag stack and pinned comment for the Season One rollout — compiled from the launch campaign, the social copy pack and the current asset manifest. Pushed back one week on Sep 12 and a second week on Sep 17 (both owner requests); premiere is now Thu Oct 1. The teaser-week days already passed before the push-backs aren't reconstructed here.</p>
+    <div class="facts">
+      <div class="fact"><span class="k">Rebuilt</span><span class="v">Thu, Sep 17 2026</span></div>
+      <div class="fact"><span class="k">Premiere</span><span class="v">Thu, Oct 1 — 4:00 pm</span></div>
+      <div class="fact"><span class="k">Cadence</span><span class="v">Short Tue · Episode Thu</span></div>
+      <div class="fact"><span class="k">Audience</span><span class="v">Not Made for Kids</span></div>
+      <div class="fact"><span class="k">Season closes</span><span class="v">Thu, Nov 19</span></div>
+    </div>
+  </header>
+
+  <div class="toolbar" id="toolbar">
+    <span class="mono" style="font-size:12px;color:var(--ink-faint);margin-right:2px;">Show:</span>
+    <button class="chip" data-filter="all" aria-pressed="true">All</button>
+    <button class="chip" data-filter="episode" style="color:var(--fire)" aria-pressed="false"><span class="dot"></span>Episodes</button>
+    <button class="chip" data-filter="short" style="color:var(--lightning)" aria-pressed="false"><span class="dot"></span>Shorts</button>
+    <button class="chip" data-filter="charcard" style="color:var(--stone)" aria-pressed="false"><span class="dot"></span>Character cards</button>
+    <button class="chip" data-filter="community" style="color:var(--mist)" aria-pressed="false"><span class="dot"></span>Community / polls</button>
+    <button class="chip" data-filter="support" aria-pressed="false"><span class="dot"></span>Cut-downs / reposts</button>
+    <button class="chip" data-filter="ops" style="color:var(--warn)" aria-pressed="false"><span class="dot"></span>Ops (paid / data check)</button>
+  </div>
+
+  <div class="callout">
+    <h2>Before you post — 2 open items (captions verified on all 8 Shorts)</h2>
+    <ol>
+      <li><b>Channel handle unconfirmed.</b> The campaign doc says to secure <span class="mono">@ChillCrewShow</span> (or similar) identically on YouTube, TikTok and Instagram before any promotion goes out. No record in the repo confirms this was actually done — check it before launch week.</li>
+      <li><b>Paid ad test status unknown.</b> Three lines are fully specced (TikTok Promote ~$100, YouTube Ads ~$150, Meta Reels boost ~$50, each timed to the week before the premiere) with a 48-hour kill rule, but nothing confirms an ad account was ever set up. Decide before the launch week whether to run them.</li>
+      <li><b>A numbering slip in the asset manifest, not carried forward here.</b> The manifest's Short-pairing note (§5.5) pairs episodes with Short numbers that don't match the captions it quotes (e.g. "E5 → S2" but quotes Short 5's line). This calendar uses the simple rule every other source document follows — Short N airs the Tuesday before Episode N — not that note's numbering.</li>
+    </ol>
+    <p style="margin:10px 0 0;font-size:13.5px;">✓ <b>Schedule pushed back a second week, Sep 17:</b> the whole rollout moved another seven days at the owner's request — premiere Thu Sep 24 → <b>Thu Oct 1</b>, finale Thu Nov 12 → <b>Thu Nov 19</b>, Season Two teaser Nov 15/17 → <b>Nov 22/24</b>, data check Oct 9–11 → Oct 16–18. (The first push-back, Sep 12, had moved Sep 17 → Sep 24.) Every date below reflects the new schedule; nothing about the masters, captions or copy changed.</p>
+    <p style="margin:6px 0 0;font-size:13.5px;">✓ <b>Download links re-pointed Sep 17:</b> all eight episode links now go to the current masters in <span class="mono">CHILL-CREW-CURRENT.md</span> §2 — the Sep 12 OP-v5 rollout rebuilt every episode (fresh media ids), and Sep 16 fixed the "Davonte" pronunciation in E2 (v3) and E3 (v4). The earlier per-episode Sep 11 fix history lives in <span class="mono">SEASON-LEDGER.md</span>.</p>
+    <p style="margin:6px 0 0;font-size:13.5px;">✓ <b>Shorts verified Sep 11:</b> Short 1's missing "ep 1 · thursday" end tag was restored (audit finding #18); Shorts 2–8's hook captions and end tags were re-verified frame-by-frame against the corrections doc — all clean. Download links below point at the current Short masters.</p>
+  </div>
+
+  <details class="decisions">
+    <summary>Conventions this calendar resolved <span></span></summary>
+    <div class="body">
+      <p><b>Episode title format:</b> two conventions exist in the source docs — <span class="mono">Chill Crew — Ep N: Title</span> (asset manifest, used below) vs. <span class="mono">Chill Crew Ep. N — "Title"</span> (social copy pack). Went with the manifest's format as the more recently maintained one; swap freely if there's a house-style preference.</p>
+      <p><b>Episode 1's pinned comment:</b> the social copy pack's wording — <i>"who counted? — ep 2 thursday, short tuesday."</i> — is used below over the launch campaign's earlier draft, <i>"Ep 2 Thursday. Short Tuesday. Who counted?"</i>, since the copy pack is the more current, purpose-built source for exact posting text.</p>
+      <p><b>Short air dates for weeks not covered by the day-by-day source table:</b> computed as "Short N airs the Tuesday two days before Episode N's Thursday," matching the manifest's own air dates exactly.</p>
+      <p><b>Episode 8's end-screen:</b> no "next episode" exists to link, so the recommendation is Season One playlist only — stated here as a recommendation, since the source docs never address it directly.</p>
+      <p><b>Schedule push-backs (Sep 12 and Sep 17):</b> both times the owner asked to push the whole rollout back a week; since every anchor in the source docs is Thursday-premiere / Tuesday-Short, "one week later" is read as +7 days on every item so the weekday rhythm never breaks. Every support post, poll, email and paid line moves with its episode.</p>
+    </div>
+  </details>
+
+  <div id="calendar"></div>
+
+  <footer>
+    Sources: <span class="mono">ChillCrew_Launch_Campaign.md</span> · <span class="mono">ChillCrew_Social_Copy_Pack.md</span> ·
+    <span class="mono">ASSET-MANIFEST.md</span> · <span class="mono">CHILL-CREW-CURRENT.md</span> §2 · <span class="mono">ChillCrew_Season1_Audit_v2.md</span> §5.
+    Master download links point at the current approved files (episodes: OP v5 rollout Sep 12, E2/E3 Davonte fix Sep 16; schedule pushed back Sep 12 and again Sep 17).
+  </footer>
+
+</div>
+
+<script>
+const CDN = "https://d2ol7oe51mr4n9.cloudfront.net/user_3Edyvjaoes1Jfe4i0WfmAJ5f94C/";
+
+function ep(id){ return CDN + id + ".mp4"; }
+
+const EPISODES = {
+  1: { title: "Blowout", id: "dccd24da-1ba3-494a-ab07-aeecfe2cfc3d",
+       desc: "Jada's locker is glowing before anyone touches her. By the time the hallway is on fire, someone has already counted four seconds.",
+       pinned: "who counted? — ep 2 thursday, short tuesday.",
+       thumb: "the glowing locker", extra: "Current master: OP v5 rollout, Sep 12 (141.6 s)." },
+  2: { title: "The Vent", id: "262adac5-86d3-4564-80fc-c5db613f2bcb",
+       desc: "Eric's drill has one rule: let it out on purpose, before it does it for you. Davonte proves happy counts too.",
+       pinned: "\"vent\" means something different now. ep 3 thursday.",
+       thumb: "the target", extra: "Current master: v3, Sep 16 — Keisha's \"Davonte. Rhythm.\" re-rolled with the correct pronunciation (160.1 s)." },
+  3: { title: "Fog", id: "e0720806-830c-4622-b279-dd1c92f9c16e",
+       desc: "Eric can call everyone's state from across the yard. Amber. Amber. Dark. Then his own goes and nobody's calling it.",
+       pinned: "where is it right now? ep 4 thursday.",
+       thumb: "Eric's eyes", extra: "Current master: v4, Sep 16 — the LAST THURSDAY recap re-cut from the corrected E2 take, and Eric's own \"Davonte's fine\" line redubbed (174.9 s)." },
+  4: { title: "Combo", id: "76f33463-246e-4cac-94e8-88ddc2ab40ab",
+       desc: "Fire and lightning on one target. It works exactly once, and only when both of them are calm.",
+       pinned: "the shover is back next week. ep 5.",
+       thumb: "fire and lightning across the pole", extra: "Current master: OP v5 rollout, Sep 12 (187.7 s)." },
+  5: { title: "The Choice", id: "6aa5b0ac-eac2-4721-a2a7-02560cc1e522",
+       desc: "The kid from the hallway is standing in front of her again. Jada's fists open.",
+       pinned: "she could have. ep 6 thursday — look at keisha's arm.",
+       thumb: "Jada's red band", extra: "Current master: OP v5 rollout, Sep 12 (168.5 s). No preview VO by design — Eric's own E6 line carries it." },
+  6: { title: "Stone", id: "6917ee8c-c76b-4f1b-894a-5aaedb595624",
+       desc: "Keisha hasn't blinked in the whole shot, and her jaw is grey. The crew finally sees what the band has been doing since episode one.",
+       pinned: "quiet isn't the same as okay. ep 7 thursday.",
+       thumb: "Keisha's grey jaw", extra: "Current master: OP v5 rollout, Sep 12 (201.5 s)." },
+  7: { title: "Dampener", id: "40592704-b4fc-44ac-b7ad-7a922e46b910",
+       desc: "Four bands on one table. Three lights red. One in pieces.",
+       pinned: "finale thursday. stay through the credits.",
+       thumb: "the bands on the table", extra: "Current master: OP v5 rollout, Sep 12 (170.0 s)." },
+  8: { title: "Shape It", id: "2fba4ec6-f6ea-47ff-b695-012da53e8574", finale: true,
+       desc: "Midday, the courtyard, dead quiet, and Jada in the middle of it with her hand up. The whole school waits for her to blow.\n\nThank you for watching Season One.",
+       pinned: "who's the man at the end? — season two.",
+       thumb: "the flame in the courtyard",
+       extra: "Current master: OP v5 rollout, Sep 12 (181.9 s) — carries the v3e finale-last-word fix and the season-card mux fix. The SEASON ONE · COMPLETE end card carries a Season Two line — the pinned comment should say so too." },
+};
+
+const SHORTS = {
+  1: { title: "Four Seconds Early", id: "ec07253f-babe-4e36-9ef0-68a9b81d730b",
+       hook: "she felt it 4 seconds early.",
+       body: "nobody counts. he does.\nepisode 1 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #ShonenAnime #AnimeShorts #BlackAnimation",
+       pinned: "what colour would yours be? 🔥⚡🌫️🪨 — ep 1 thursday 4 pm." },
+  2: { title: "Happy Is A Flare Too", id: "afb1710e-3c0a-4b3a-b7fc-a8793238e9f6",
+       hook: "happy is a flare too.",
+       body: "he wasn't angry. that's the point.\nepisode 2 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #AnimeShorts #ShonenAnime",
+       pinned: "davonte's is the one nobody takes seriously. watch what it does in ep 2." },
+  3: { title: "Where Is It Right Now", id: "8c34dc75-07b2-48ce-a523-ce4142cb8b29",
+       hook: "he could read everyone but himself.",
+       body: "episode 3 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #AnimeShorts #IndieAnimation",
+       pinned: "\"where is it right now?\" — try answering that about yourself. out loud. it's harder than it looks." },
+  4: { title: "Only Works If Both Calm", id: "ed2dea36-aae9-47d2-950e-dc90f7bb6d7a",
+       hook: "it only works if you're both calm.",
+       body: "fire and lightning. same target.\nepisode 4 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #AnimeEdit #ShonenAnime",
+       pinned: "the combo is the first time two flares touch on purpose. ep 4 thursday." },
+  5: { title: "She Could Have", id: "0bd585b6-cd58-42f2-9ae7-e62de99183a7",
+       hook: "she could have. she didn't.",
+       body: "episode 5 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #AnimeShorts #BlackAnimation",
+       pinned: "the shover from episode 1 comes back. ep 5." },
+  6: { title: "Quiet Isn't Okay", id: "b77a12e1-26b3-4710-b01a-59487e7c1379",
+       hook: "quiet isn't the same as okay.",
+       body: "keisha's band is the oldest. look at her arm in every episode so far.\nepisode 6 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #IndieAnimation #AnimeShorts",
+       pinned: "go back to ep 1, the yard scene, her fingertips. it's been there the whole time." },
+  7: { title: "She Took It Off", id: "52fdfafc-d1d6-4fd9-83d1-03556a7286f1",
+       hook: "she took it off.",
+       body: "episode 7 thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #ShonenAnime #AnimeEdit",
+       pinned: "four bands. three red. one in pieces. ep 7 thursday." },
+  8: { title: "Whole School Waited", id: "e6afc17b-ebee-4831-8baf-013dfb445777",
+       hook: "the whole school waited for her to blow.",
+       body: "season finale thursday. [link]",
+       tags: "#ChillCrew #Anime #Animation #ShonenAnime #AnimeShorts #BlackAnimation",
+       pinned: "stay through the credits." },
+};
+
+function episodeCard(n){
+  const e = EPISODES[n];
+  const title = `Chill Crew — Ep ${n}: ${e.title}` + (e.finale ? " (Season Finale)" : "");
+  return {
+    cat: "episode", plat: n===1 ? "YOUTUBE · PREMIERE 4PM" : "YOUTUBE · 4PM",
+    headline: title,
+    sub: n===1 ? "Owner in the live chat for the 90-second premiere + 15 minutes after." : (e.finale ? "Season closes." : ""),
+    copy: [
+      ["Description", e.desc + "\n\nSeason One playlist: [link]\n" + (e.finale ? "" : "Short Tuesday. Episode Thursday.\n") + "Made by McCray Learning Lab."],
+      ["Pinned comment", e.pinned],
+      ["Thumbnail", "Episode hook frame — " + e.thumb],
+      ["End screen", e.finale ? "Season One playlist only (no next episode to link) — recommendation, not confirmed by the owner." : "Next episode + Season One playlist, right third of the last 20s."],
+    ].concat(e.extra ? [["Note", e.extra]] : []),
+    link: ep(e.id), linkLabel: "Download E" + n + " master (current)"
+  };
+}
+function shortCard(n){
+  const s = SHORTS[n];
+  const sub = n === 1 ? s.hook + "  ✓ end tag fixed Sep 11 (audit finding #18)." : s.hook;
+  return {
+    cat: "short", plat: "TIKTOK · IG REELS · YT SHORTS",
+    headline: `Short ${n} — "${s.title}"`,
+    sub: sub,
+    copy: [
+      ["Caption body", s.body],
+      ["Hashtags", s.tags],
+      ["Pinned comment", s.pinned],
+    ],
+    link: ep(s.id), linkLabel: "Download Short " + n + " master"
+  };
+}
+function post(cat, plat, headline, sub, copy, link, linkLabel){
+  return {cat, plat, headline, sub, copy, link, linkLabel};
+}
+
+const WEEKS = [
+  { label: "Teaser week — close-out", range: "Sep 24 – 27", days: [
+    { d:"Thu", n:24, mon:"Sep", posts: [
+      post("support","TIKTOK · IG · YT SHORTS","15-second trailer re-cut","\"four seconds. that's the warning you get.\"",
+        [["Caption","oct 1. 4 pm. [link]"],["Hashtags","#ChillCrew #Anime #Animation #AnimeEdit #ShonenAnime"]]),
+      post("charcard","IG FEED","Character card: Eric",""),
+      post("community","YOUTUBE COMMUNITY","Poll — \"Who's your Flare?\"","🔥 fire · ⚡ lightning · 🌫️ mist · 🪨 stone"),
+    ]},
+    { d:"Fri", n:25, mon:"Sep", posts: [
+      post("support","TIKTOK · IG REELS","Cut-down: E1 S4","Davonte throwing sparks — \"the fun one.\""),
+      post("charcard","IG FEED","Character card: Davonte",""),
+    ]},
+    { d:"Sat", n:26, mon:"Sep", posts: [
+      post("support","TIKTOK","Repost the week's best performer","New first line."),
+      post("charcard","IG FEED","Character card: Keisha",""),
+    ]},
+    { d:"Sun", n:27, mon:"Sep", posts: [
+      post("community","IG / TIKTOK STORY","Story only","\"4 days.\""),
+    ]},
+  ]},
+
+  { label: "Launch week", range: "Sep 28 – Oct 4", milestone: {text:"Premiere Thu", m:"premiere"}, days: [
+    { d:"Mon", n:28, mon:"Sep", posts: [
+      post("support","TIKTOK","15-second trailer",""),
+      post("community","IG STORY","\"Thursday 4 pm.\"",""),
+      post("community","YOUTUBE COMMUNITY","Image post: still from E1","No caption."),
+      post("ops","PAID · LINE A + B START","TikTok Promote ($100, Sep 28 – Oct 2) + YouTube Ads ($150, Sep 28 – Oct 4) begin",
+        "Line A: Short 1 boosted, anime/animation/comics interests. Line B: 40s trailer, Shorts + in-feed placements only, no skippable pre-roll.",
+        [["Kill rule","If a line's cost-per-follow/sub is under half the others' after 48h, move its remaining budget to the winner."]]),
+    ]},
+    { d:"Tue", n:29, mon:"Sep", posts: [
+      shortCard(1),
+      post("ops","PAID · LINE C STARTS","Meta Reels boost ($50, Sep 29 – Oct 1)","9:16 trailer → Premiere-page link. Target: teachers, counselors, SEL, parents 25–54."),
+    ]},
+    { d:"Wed", n:30, mon:"Sep", posts: [
+      post("support","TIKTOK · IG · YT","15-second trailer re-cut, everywhere",""),
+      post("support","IG FEED","Poster 4:5 + Premiere link",""),
+      post("community","EMAIL","Educator / parent email out","Subject: \"A middle-school anime that's secretly the CASEL five.\"",
+        [["Body","Hi [name],\n\nI make an animated series called Chill Crew. It's a shonen-style show about four kids at a middle school whose emotions are visible — fire, lightning, mist, stone — four seconds before they get out of hand. Each of the eight episodes is built on one CASEL competency; the kids never hear the word \"competency,\" they just watch a crew teach each other to catch it, vent it, and shape it.\n\nEpisode 1 premieres this Thursday, October 1, at 4 pm: [link]. Episodes are 90 seconds. The attached one-pager maps each episode to its competency with a discussion prompt you can use the same day.\n\nIf it's useful, share it with your grade team or post it for families. If it's not, tell me why — the season is written but the edit isn't locked.\n\nElla Sanders\nMcCray Learning Lab"]]),
+    ]},
+    { d:"Thu", n:1, mon:"Oct", posts: [
+      episodeCard(1),
+      post("support","TIKTOK · IG FEED","E1 hook (Scene 1, 12s) — \"ep 1 out now\"","Post the E1 thumbnail with the tagline."),
+    ]},
+    { d:"Fri", n:2, mon:"Oct", posts: [
+      post("support","TIKTOK · IG REELS · YT SHORTS","Cut-down: E1 S5","\"That thing makes it worse.\" — not the same clip as Short 1."),
+      post("ops","OPS","Reply to every comment, every platform","First 20 comments within an hour of posting; ask a question back (\"what colour's yours?\")."),
+    ]},
+    { d:"Sat", n:3, mon:"Oct", posts: [
+      post("support","TIKTOK / IG","Repost E1 hook (S1, 12s)","Caption: \"Episode 1 is out. Link in bio.\" · Story: E1 link."),
+    ]},
+    { d:"Sun", n:4, mon:"Oct", posts: [
+      post("community","YOUTUBE COMMUNITY · IG STORY","Image post: still from E2","No context, no caption."),
+    ]},
+  ]},
+
+  { label: "Episode 2 week", range: "Oct 5 – 11", days: [
+    { d:"Mon", n:5, mon:"Oct", posts: [ post("charcard","TIKTOK · IG","Character card: Eric (video this time)","") ]},
+    { d:"Tue", n:6, mon:"Oct", posts: [ shortCard(2) ]},
+    { d:"Wed", n:7, mon:"Oct", posts: [ post("support","TIKTOK · IG REELS","Cut-down: the E2 drill","Eric counting down; Jada's fists opening and closing.") ]},
+    { d:"Thu", n:8, mon:"Oct", posts: [ episodeCard(2) ]},
+    { d:"Fri", n:9, mon:"Oct", posts: [
+      post("support","TIKTOK · IG REELS","Cut-down: the E2 button",""),
+      post("ops","OPS","Reply to everything",""),
+    ]},
+    { d:"Sat", n:10, mon:"Oct", posts: [ post("support","TIKTOK","Repost the week's best","New first line.") ]},
+    { d:"Sun", n:11, mon:"Oct", posts: [ post("community","YOUTUBE COMMUNITY","Poll — \"Which drill would you fail?\"","the count · the vent · the read · the combo") ]},
+  ]},
+
+  { label: "Episode 3 week", range: "Oct 12 – 18", milestone: {text:"Data check begins Fri", m:"check"}, days: [
+    { d:"Mon", n:12, mon:"Oct", posts: [ post("charcard","TIKTOK · IG","Character card: Davonte","") ]},
+    { d:"Tue", n:13, mon:"Oct", posts: [ shortCard(3) ]},
+    { d:"Wed", n:14, mon:"Oct", posts: [ post("support","TIKTOK · IG REELS","Cut-down: \"Amber. Amber. Dark.\"","") ]},
+    { d:"Thu", n:15, mon:"Oct", posts: [ episodeCard(3) ]},
+    { d:"Fri", n:16, mon:"Oct", posts: [
+      post("support","TIKTOK · IG REELS","Cut-down: the E3 button",""),
+      post("ops","OPS · DATA CHECK WINDOW OPENS (OCT 16–18)","Review KPIs before committing E4–E8 to the calendar",
+        "Floors: Shorts viewed-vs-swiped ≥70% · Short avg. % viewed ≥80% on an 18s Short · E1 30s retention ≥65% · E1 avg. view duration ≥55% · thumbnail CTR ≥5% · subs per 1,000 Short views ≥8 · cost per follow/sub under $1.50 (TikTok) / $3 (YouTube) · any organic educator reshare.",
+        [["Decides","Which Short type gets one bonus Short per remaining episode · whether to tighten drill-scene pacing in E4–E8 · which paid line gets the whole remaining budget for the E4 week."]]),
+    ]},
+    { d:"Sat", n:17, mon:"Oct", posts: [ post("support","TIKTOK","Repost the week's best","") ]},
+    { d:"Sun", n:18, mon:"Oct", posts: [
+      post("charcard","IG FEED","Character card: Keisha","Held back deliberately — she's the E6 reveal."),
+      post("community","YOUTUBE COMMUNITY","Text post","\"Four seconds early. Say it back to us in the comments and tell us when you caught yours this week.\""),
+    ]},
+  ]},
+
+  { label: "Episode 4 week", range: "Oct 19 – 25", note: "Beyond this point the source docs give the Tue-Short / Thu-episode anchors and full copy, but not a day-by-day platform breakdown — the character-card / cut-down / repost rhythm from weeks 1–3 is assumed to continue.", days: [
+    { d:"Tue", n:20, mon:"Oct", posts: [ shortCard(4) ]},
+    { d:"Thu", n:22, mon:"Oct", posts: [ episodeCard(4) ]},
+  ]},
+  { label: "Episode 5 week", range: "Oct 26 – Nov 1", days: [
+    { d:"Tue", n:27, mon:"Oct", posts: [ shortCard(5) ]},
+    { d:"Thu", n:29, mon:"Oct", posts: [ episodeCard(5) ]},
+  ]},
+  { label: "Episode 6 week", range: "Nov 2 – 8", days: [
+    { d:"Tue", n:3, mon:"Nov", posts: [ shortCard(6) ]},
+    { d:"Thu", n:5, mon:"Nov", posts: [ episodeCard(6) ]},
+  ]},
+  { label: "Episode 7 week", range: "Nov 9 – 15", days: [
+    { d:"Tue", n:10, mon:"Nov", posts: [ shortCard(7) ]},
+    { d:"Thu", n:12, mon:"Nov", posts: [ episodeCard(7) ]},
+  ]},
+  { label: "Finale week", range: "Nov 16 – 22", milestone: {text:"Season Finale Thu", m:"finale"}, days: [
+    { d:"Tue", n:17, mon:"Nov", posts: [
+      shortCard(8),
+      post("community","YOUTUBE COMMUNITY","Text post (finale week)","\"Eight episodes. Four Flares. One school. Finale Thursday, stay through the credits.\"","Exact day not specified in the source docs — paired here with the last Short."),
+    ]},
+    { d:"Thu", n:19, mon:"Nov", posts: [ episodeCard(8) ]},
+    { d:"Sun", n:22, mon:"Nov", posts: [
+      post("community","YOUTUBE COMMUNITY · PUBLIC UPLOAD","Season Two teaser — 16:9 (24.5s)","\"You learned to hold it. Now learn what it is for.\"",
+        [["Pinned comment","who's the man at the end? — season two."],["Poll","What is HIS Flare?"]],
+        ep("a8852814-2b79-455a-a400-71eb1303cb07"), "Download Season Two teaser (16:9)"),
+    ]},
+  ]},
+  { label: "Season Two teaser — 9:16", range: "Nov 23 – 24", milestone: {text:"Teaser cut-down", m:"teaser"}, days: [
+    { d:"Tue", n:24, mon:"Nov", posts: [
+      post("short","TIKTOK · IG REELS · YT SHORTS","Season Two teaser — 9:16 cut-down","Keeps the Tuesday-Short rhythm going into the off-season.",
+        [], ep("a575c545-fa68-46bd-80c9-3426e13499a3"), "Download Season Two teaser (9:16)"),
+    ]},
+  ]},
+];
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function renderPost(p){
+  const el = document.createElement("div");
+  el.className = "post";
+  el.dataset.cat = p.cat;
+  const isAccent = p.cat === "episode" || p.cat === "short" || p.cat === "charcard" || p.cat === "community" || p.cat === "ops";
+  el.innerHTML = `
+    <div class="post-head">
+      <span class="plat ${isAccent ? "accent" : ""}">${escapeHtml(p.plat)}</span>
+    </div>
+    <div class="headline">${escapeHtml(p.headline)}</div>
+    ${p.sub ? `<div class="subline">${escapeHtml(p.sub)}</div>` : ""}
+    ${(p.copy && p.copy.length) ? `<details><summary>Full copy</summary><div class="copy-block">${
+      p.copy.map(([label,val]) => `<div class="row"><span class="label">${escapeHtml(label)}</span>${escapeHtml(val)}</div>`).join("")
+    }</div></details>` : ""}
+    ${p.link ? `<a class="dl-link" href="${p.link}" target="_blank" rel="noopener">↓ ${escapeHtml(p.linkLabel)}</a>` : ""}
+  `;
+  return el;
+}
+
+const cal = document.getElementById("calendar");
+WEEKS.forEach(week => {
+  const wk = document.createElement("section");
+  wk.className = "week";
+  const head = document.createElement("div");
+  head.className = "week-head";
+  head.innerHTML = `
+    <span class="wk-label">${escapeHtml(week.label)}</span>
+    <span style="display:flex;align-items:center;gap:10px;">
+      ${week.milestone ? `<span class="milestone-badge" data-m="${week.milestone.m}">${escapeHtml(week.milestone.text)}</span>` : ""}
+      <span class="wk-range mono">${escapeHtml(week.range)}</span>
+    </span>
+  `;
+  wk.appendChild(head);
+  if (week.note){
+    const n = document.createElement("p");
+    n.className = "mono";
+    n.style.cssText = "font-size:12px;color:var(--ink-faint);margin:0 0 10px;line-height:1.5;";
+    n.textContent = week.note;
+    wk.appendChild(n);
+  }
+  week.days.forEach(day => {
+    const row = document.createElement("div");
+    row.className = "day-row";
+    row.innerHTML = `
+      <div class="day-rail">
+        <span class="dow mono">${day.d}</span>
+        <span class="dnum">${day.n}</span>
+        <span class="mon">${day.mon}</span>
+      </div>
+      <div class="posts"></div>
+    `;
+    const postsEl = row.querySelector(".posts");
+    day.posts.forEach(p => postsEl.appendChild(renderPost(p)));
+    wk.appendChild(row);
+  });
+  cal.appendChild(wk);
+});
+
+const chips = document.querySelectorAll(".chip");
+chips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    chips.forEach(c => c.setAttribute("aria-pressed","false"));
+    chip.setAttribute("aria-pressed","true");
+    const f = chip.dataset.filter;
+    document.querySelectorAll(".post").forEach(p => {
+      p.hidden = !(f === "all" || p.dataset.cat === f);
+    });
+    document.querySelectorAll(".day-row").forEach(row => {
+      const visible = [...row.querySelectorAll(".post")].some(p => !p.hidden);
+      row.hidden = !visible;
+    });
+    document.querySelectorAll(".week").forEach(wk => {
+      const visible = [...wk.querySelectorAll(".day-row")].some(r => !r.hidden);
+      wk.hidden = !visible;
+    });
+  });
+});
+</script>
+
+</body>
+</html>
+
+</body></html>

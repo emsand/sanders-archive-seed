@@ -1,0 +1,636 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>The Shape of Your Code</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Lexend:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --paper:#f0f1ea; --surface:#f9faf4; --surface-2:#e7e9df;
+  --ink:#23241f; --ink-soft:#55584e; --line:#d6d9cd;
+  --accent:#2f7c58; --accent-2:#8cc7a6; --wash:#e3efe6;
+  --good:#2f9e6a; --warn:#b3781f;
+  /* code editor panel — one deliberate look on both themes */
+  --code-bg:#20242a; --code-fg:#e7eae6; --code-line:#31363d;
+  --c-com:#8b9a8f; --c-str:#b7db99; --c-key:#f2c879; --c-tag:#84bce6; --c-num:#e0a0c0;
+  --radius:14px; --measure:65ch;
+  --shadow:0 1px 2px rgba(30,40,32,.05), 0 6px 22px -12px rgba(30,50,38,.18);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#171a16; --surface:#20241e; --surface-2:#2a2f27;
+  --ink:#ecefe5; --ink-soft:#a6ac9d; --line:#353b31;
+  --accent:#82cba3; --accent-2:#8cc7a6; --wash:#20302a;
+  --good:#6cc79a; --warn:#e0aa5b;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 26px -14px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --paper:#171a16; --surface:#20241e; --surface-2:#2a2f27;
+  --ink:#ecefe5; --ink-soft:#a6ac9d; --line:#353b31;
+  --accent:#82cba3; --accent-2:#8cc7a6; --wash:#20302a;
+  --good:#6cc79a; --warn:#e0aa5b;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 26px -14px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Lexend",system-ui,sans-serif; line-height:1.65;
+  font-size:clamp(1rem,.96rem+.2vw,1.075rem);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.disp{font-family:"Bricolage Grotesque","Lexend",system-ui,sans-serif;text-wrap:balance;line-height:1.12;letter-spacing:-.015em}
+a{color:var(--accent);text-underline-offset:3px}
+code,kbd,pre,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:4px}
+mark{background:var(--accent-2);color:#173a2a;padding:0 .18em;border-radius:3px}
+
+/* ============ SCROLL PROGRESS + HEADER ============ */
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:60;transition:width .1s linear}
+header.top{
+  position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.top-in{max-width:1180px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.01em}
+.brand svg{width:26px;height:30px;flex:none}
+.brand .arch{fill:var(--accent-2)}
+.brand b{font-weight:700}
+.top-spacer{flex:1}
+.tbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 13px;font:inherit;font-size:.85rem;cursor:pointer;display:inline-flex;gap:7px;align-items:center;transition:border-color .15s,background .15s}
+.tbtn:hover{border-color:var(--accent)}
+
+/* ============ SHELL ============ */
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;align-items:start}
+nav.toc{position:sticky;top:84px;align-self:start;padding:18px 0;font-size:.9rem;max-height:calc(100vh - 96px);overflow:auto}
+nav.toc .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);padding:0 0 10px}
+nav.toc a{display:flex;gap:9px;align-items:baseline;padding:7px 12px;border-radius:9px;color:var(--ink-soft);text-decoration:none;transition:color .15s,background .15s;border-left:2px solid transparent;margin-left:-2px}
+nav.toc a .n{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--accent);font-weight:500;min-width:1.3em}
+nav.toc a:hover{color:var(--ink);background:var(--surface)}
+nav.toc a.on{color:var(--ink);font-weight:600;border-left-color:var(--accent);background:var(--surface)}
+main{padding:0 0 90px;min-width:0}
+.measure{max-width:var(--measure)}
+
+/* ============ HERO ============ */
+.hero{padding:64px 0 30px}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);font-weight:600;margin-bottom:18px}
+.hero h1{font-size:clamp(2.5rem,1.7rem+3.4vw,4.1rem);font-weight:800}
+.hero .lede{font-size:clamp(1.15rem,1.05rem+.5vw,1.4rem);color:var(--ink-soft);max-width:34ch;margin:22px 0 0;line-height:1.4}
+.shapes{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 8px}
+.shape-chip{flex:1;min-width:180px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.shape-chip .k{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.shape-chip h3{font-size:1.08rem;margin:7px 0 4px}
+.shape-chip p{font-size:.9rem;color:var(--ink-soft);line-height:1.45}
+.howto{margin-top:26px;background:var(--wash);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:var(--radius);padding:16px 20px;font-size:.95rem;max-width:var(--measure)}
+.howto b{color:var(--accent)}
+
+/* ============ MODULE ============ */
+.mod{padding:52px 0;border-top:1px solid var(--line)}
+.mod-tag{display:inline-flex;align-items:center;gap:9px;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;font-weight:500;margin-bottom:14px}
+.mod-tag .num{background:var(--accent);color:var(--paper);width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:700}
+.mod h2{font-size:clamp(1.7rem,1.3rem+1.5vw,2.3rem);font-weight:700}
+.mod > p, .mod .measure > p{margin-top:16px}
+.mod p{color:var(--ink)}
+.lead-in{font-size:1.12rem;color:var(--ink-soft)!important}
+.sub{font-size:1.15rem;font-weight:600;font-family:"Bricolage Grotesque",sans-serif;margin:34px 0 4px;letter-spacing:-.01em}
+strong{font-weight:600}
+.mod ul.plain{margin:14px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;max-width:var(--measure)}
+.mod ul.plain li{position:relative;padding-left:26px}
+.mod ul.plain li::before{content:"";position:absolute;left:6px;top:.62em;width:7px;height:7px;border-radius:2px;background:var(--accent-2);transform:rotate(45deg)}
+
+/* ============ ANATOMY: LAYER STACK ============ */
+.stack{display:flex;flex-direction:column;gap:10px;margin:24px 0 4px}
+.layer{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.layer[open]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.layer summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 18px}
+.layer summary::-webkit-details-marker{display:none}
+.layer .ln{width:34px;height:34px;border-radius:9px;background:var(--wash);color:var(--accent);display:grid;place-items:center;font-family:"JetBrains Mono",monospace;font-weight:700;flex:none}
+.layer .lt{flex:1;min-width:0}
+.layer .lt b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:1.05rem}
+.layer .lt span{font-size:.82rem;color:var(--ink-soft);font-family:"JetBrains Mono",monospace}
+.layer .caret{color:var(--ink-soft);transition:transform .2s;flex:none}
+.layer[open] .caret{transform:rotate(90deg)}
+.layer .body{padding:2px 18px 18px 66px;font-size:.96rem;color:var(--ink-soft)}
+.layer .body p{color:var(--ink-soft)}
+.flow{text-align:center;color:var(--ink-soft);font-size:.8rem;font-family:"JetBrains Mono",monospace;padding:2px}
+
+/* ============ FILE-MAP SKYLINE (flagship) ============ */
+.skyline{display:flex;flex-direction:column;gap:4px;margin:24px 0 4px}
+.region{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
+.region summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:0 16px;position:relative}
+.region summary::-webkit-details-marker{display:none}
+.region .stripe{width:5px;align-self:stretch;background:var(--accent-2);flex:none;border-radius:3px}
+.region .rl{flex:1;padding:11px 0;font-weight:600;font-family:"Bricolage Grotesque",sans-serif;font-size:.98rem}
+.region .rr{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.region[open]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.region .body{padding:4px 16px 16px 33px;font-size:.94rem;color:var(--ink-soft)}
+.region.engine .stripe{background:var(--accent)}
+.region.engine .rl{color:var(--accent)}
+.legendline{font-size:.8rem;color:var(--ink-soft);margin:14px 0 0;font-family:"JetBrains Mono",monospace}
+
+/* ============ CODE CARD ============ */
+.code-card{background:var(--code-bg);border-radius:12px;overflow:hidden;margin:22px 0 0;box-shadow:var(--shadow);border:1px solid var(--code-line)}
+.code-head{display:flex;align-items:center;gap:8px;padding:10px 15px;border-bottom:1px solid var(--code-line);color:#aeb6ae;font-family:"JetBrains Mono",monospace;font-size:.76rem}
+.code-head .dot{width:11px;height:11px;border-radius:50%;background:#3a4048}
+.code-head .file{margin-left:6px;color:#cfd6cd}
+.code-card pre{margin:0;padding:16px 15px;overflow-x:auto;font-size:.82rem;line-height:1.72;color:var(--code-fg)}
+.code-card code{white-space:pre}
+.tok-com{color:var(--c-com);font-style:italic}
+.tok-str{color:var(--c-str)}
+.tok-key{color:var(--c-key)}
+.tok-tag{color:var(--c-tag)}
+.tok-num{color:var(--c-num)}
+.mk{background:var(--accent-2);color:#14392a;font-weight:700;border-radius:4px;padding:0 .34em;margin-right:.1em;font-size:.76em;vertical-align:.08em}
+.reading{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;max-width:var(--measure)}
+.reading li{display:flex;gap:11px;align-items:baseline;font-size:.95rem}
+.reading .mk{flex:none}
+
+/* ============ EXERCISE + RECAP ============ */
+.try{margin:30px 0 0;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);max-width:var(--measure)}
+.try .h{display:flex;align-items:center;gap:9px;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px}
+.try .h .pill{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;background:var(--wash);color:var(--accent);padding:3px 8px;border-radius:999px;font-weight:600}
+.try ol{margin:8px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.try ol li{padding-left:4px}
+.try .safe{margin-top:12px;font-size:.85rem;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:10px}
+.try kbd{background:var(--surface-2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:.8em}
+.recap{margin:28px 0 0;display:flex;gap:12px;align-items:flex-start;max-width:var(--measure);font-size:.96rem;background:var(--wash);border-radius:12px;padding:15px 18px}
+.recap .ic{flex:none;color:var(--accent);font-weight:700;font-family:"JetBrains Mono",monospace}
+.recap b{color:var(--accent)}
+
+/* ============ APP SWATCHES ============ */
+.apps{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;max-width:var(--measure)}
+.app{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 13px 6px 8px;font-size:.85rem}
+.app .sw{width:15px;height:15px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
+
+/* ============ GLOSSARY ============ */
+.gloss{margin:22px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.gterm{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+.gterm b{font-family:"JetBrains Mono",monospace;font-size:.86rem;color:var(--accent);display:block;margin-bottom:4px}
+.gterm span{font-size:.88rem;color:var(--ink-soft);line-height:1.5}
+
+/* ============ CALLOUT ============ */
+.note{border-left:3px solid var(--accent-2);background:var(--surface);border-radius:0 10px 10px 0;padding:13px 18px;margin:22px 0 0;font-size:.94rem;color:var(--ink-soft);max-width:var(--measure)}
+.note b{color:var(--ink)}
+
+footer{border-top:1px solid var(--line);margin-top:20px;padding:34px 0 60px;color:var(--ink-soft);font-size:.9rem;max-width:var(--measure)}
+footer .arch{width:22px;height:26px;vertical-align:-6px;margin-right:6px}
+footer .arch path{fill:var(--accent-2)}
+
+@media (max-width:860px){
+  .wrap{grid-template-columns:1fr;gap:0}
+  nav.toc{position:static;max-height:none;overflow:visible;border-bottom:1px solid var(--line);margin:0 -22px;padding:14px 22px;display:flex;gap:6px;flex-wrap:wrap}
+  nav.toc .lbl{width:100%;padding-bottom:6px}
+  nav.toc a{border-left:0;padding:6px 11px;background:var(--surface);border:1px solid var(--line)}
+  nav.toc a.on{border-color:var(--accent)}
+  .hero{padding:40px 0 20px}
+}
+</style>
+
+<div id="bar"></div>
+
+<header class="top">
+  <div class="top-in">
+    <span class="brand">
+      <svg viewBox="0 0 24 28" aria-hidden="true"><path class="arch" d="M1 27V13a11 11 0 0 1 22 0v14Z"/></svg>
+      The Shape of <b>Your Code</b>
+    </span>
+    <span class="top-spacer"></span>
+    <button class="tbtn" id="theme" aria-label="Switch light or dark theme">◐ Theme</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Course modules">
+    <div class="lbl">The course</div>
+    <a href="#start"><span class="n">→</span> Start here</a>
+    <a href="#m0"><span class="n">00</span> What code is</a>
+    <a href="#m1"><span class="n">01</span> The simple shape</a>
+    <a href="#m2"><span class="n">02</span> A story is data</a>
+    <a href="#m3"><span class="n">03</span> Two variations</a>
+    <a href="#m4"><span class="n">04</span> The big file</a>
+    <a href="#m5"><span class="n">05</span> How it ships</a>
+    <a href="#m6"><span class="n">06</span> On your own</a>
+  </nav>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="start">
+      <p class="eyebrow">A course for the person who runs the studio, not the codebase</p>
+      <h1>Read your own apps.</h1>
+      <p class="lede">Your six apps look different on the outside. Underneath, they're built in just <strong style="color:var(--ink)">three shapes</strong>. Learn to see the pattern and you can open any of them and know exactly what you're looking at.</p>
+
+      <div class="shapes">
+        <div class="shape-chip"><span class="k">Shape 1 · tidy</span><h3>Layered</h3><p>A shell + an engine + content in separate files. Four of your apps. The clearest place to start.</p></div>
+        <div class="shape-chip"><span class="k">Shape 2 · compact</span><h3>One file</h3><p>Everything in a single page. Treasures, and your big flagship. Same ideas, packed together.</p></div>
+        <div class="shape-chip"><span class="k">Shape 3 · dialogue</span><h3>Conversation</h3><p>Eli Walks plays a scripted back-and-forth. A twist on the layered shape.</p></div>
+      </div>
+
+      <div class="howto">
+        <b>How to use this.</b> Go in order — each module builds on the last. Every one ends with a tiny, <b>safe</b> thing to try in your own code (nothing you can break permanently). Written for someone brand new to code: every term is explained the first time it appears. Take it at your own pace and come back anytime.
+      </div>
+    </section>
+
+    <!-- ============ MODULE 0 ============ -->
+    <section class="mod" id="m0">
+      <span class="mod-tag"><span class="num">0</span> What code even is</span>
+      <h2>Three languages, one page</h2>
+      <div class="measure">
+        <p class="lead-in">Every one of your apps is a <strong>web page</strong> — the same kind of thing a browser opens. And every web page is made of three languages, each with one job.</p>
+      </div>
+
+      <div class="stack">
+        <details class="layer" open>
+          <summary><span class="ln">H</span><span class="lt"><b>HTML — the structure</b><span>the words and boxes that are on the page</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>HTML lists <em>what exists</em>: a heading here, a button there, an empty box to hold a story. Think of it as the skeleton. On its own it's plain and unstyled — just the bones.</p></div>
+        </details>
+        <details class="layer">
+          <summary><span class="ln">C</span><span class="lt"><b>CSS — the looks</b><span>colors, fonts, spacing, layout</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>CSS is the paint and the layout: this is peach, that font is rounded, leave this much space. Change one CSS line and the whole app can re-color. It never changes <em>what</em> is on the page, only how it looks.</p></div>
+        </details>
+        <details class="layer">
+          <summary><span class="ln">JS</span><span class="lt"><b>JavaScript — the behavior</b><span>what happens when someone taps</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>JavaScript (or "JS") is the <em>actions</em>: when a child taps a choice, show the next page; play the narration; remember the streak. It's the part that makes the app <em>do</em> things instead of just sit there.</p></div>
+        </details>
+      </div>
+
+      <p class="sub">How the browser puts them together</p>
+      <div class="measure">
+        <p>When someone opens your app, the browser reads the HTML from top to bottom (building the boxes), applies the CSS (painting them), and runs the JavaScript (which fills the empty boxes with real stories and wires up the taps). That order matters, and you'll see it directly in the next module.</p>
+      </div>
+
+      <div class="note measure"><b>The one big idea of this whole course:</b> your apps deliberately keep three things apart — the <b>shell</b> (empty boxes), the <b>content</b> (the stories, as plain data), and the <b>engine</b> (the code that puts the content into the boxes). Almost everything you'll want to change is <em>content</em>, and content is the safest, friendliest part to touch.</p></div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: a page is <b>HTML</b> (structure) + <b>CSS</b> (looks) + <b>JavaScript</b> (behavior) — and your apps separate the <b>shell</b>, the <b>content</b>, and the <b>engine</b>.</div></div>
+    </section>
+
+    <!-- ============ MODULE 1 ============ -->
+    <section class="mod" id="m1">
+      <span class="mod-tag"><span class="num">1</span> The simple shape</span>
+      <h2>An engine app, layer by layer</h2>
+      <div class="measure">
+        <p class="lead-in">Four of your apps share one clean design. We'll use <strong>My Brave Words</strong> as the example, but My School Story, My Fast Brain, and My Whole Story are built the exact same way.</p>
+        <p>Open its folder (<code>my-brave-words/</code>) and it's really just four pieces. Click each layer to see what it does:</p>
+      </div>
+
+      <div class="stack">
+        <details class="layer" open>
+          <summary><span class="ln">1</span><span class="lt"><b>The Shell</b><span>index.html · ~227 lines</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>A small HTML file with almost nothing visible in it. It sets up the header, a single empty box for the story, the footer, and the pop-up dialogs. Then it loads the engine. This is the "page" — and it's tiny on purpose.</p></div>
+        </details>
+        <details class="layer">
+          <summary><span class="ln">2</span><span class="lt"><b>The Engine</b><span>app.js · ~890 lines</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>One JavaScript file with all the smarts: it loads a story, draws each page, handles the choice tap, plays narration, tracks progress, switches English/Spanish. You rarely need to touch this — it's the machine that runs every story.</p></div>
+        </details>
+        <details class="layer">
+          <summary><span class="ln">3</span><span class="lt"><b>The Content</b><span>stories/*.json · one file per story</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>Each story is its own small data file (we'll dissect one in Module 2). This is where the words, choices, and pictures live. Add a story = add a file here and list it. <strong>This is the part you'll actually edit.</strong></p></div>
+        </details>
+        <details class="layer">
+          <summary><span class="ln">4</span><span class="lt"><b>The Commerce</b><span>family.js · identical in all four apps</span></span><span class="caret">▸</span></summary>
+          <div class="body"><p>A shared add-on that handles grown-up sign-in and the family plan (accounts, unlocking premium features). It's <em>byte-for-byte the same file</em> in all four apps — a drop-in you don't customize.</p></div>
+        </details>
+      </div>
+      <p class="flow">the Engine reads the Content and fills the Shell ↓</p>
+
+      <p class="sub">See the shell for real</p>
+      <div class="measure"><p>Here's the important part of that 227-line shell file. Notice how little there is:</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">my-brave-words/index.html</span></div>
+<pre><code><span class="tok-com">&lt;!-- the header, footer, and dialogs live up here --&gt;</span>
+
+<span class="mk">A</span><span class="tok-tag">&lt;main</span> <span class="tok-key">id</span>=<span class="tok-str">"stage"</span> <span class="tok-key">class</span>=<span class="tok-str">"stage"</span><span class="tok-tag">&gt;&lt;/main&gt;</span>
+
+<span class="mk">B</span><span class="tok-tag">&lt;script</span> <span class="tok-key">src</span>=<span class="tok-str">"app.js"</span><span class="tok-tag">&gt;&lt;/script&gt;</span>
+<span class="mk">C</span><span class="tok-tag">&lt;script</span> <span class="tok-key">src</span>=<span class="tok-str">"family.js"</span><span class="tok-tag">&gt;&lt;/script&gt;</span></code></pre>
+      </div>
+      <ul class="reading">
+        <li><span class="mk">A</span><div><b>The one empty box.</b> The whole visible app — every story, page, and choice — gets drawn <em>inside</em> this single <code>&lt;main&gt;</code>. It starts empty; the engine fills it.</div></li>
+        <li><span class="mk">B</span><div><b>Load the engine.</b> This line pulls in <code>app.js</code> (the 890-line machine). "src" just means "the source file is over there."</div></li>
+        <li><span class="mk">C</span><div><b>Load the commerce add-on.</b> Same idea — the shared sign-in/plan code.</div></li>
+      </ul>
+
+      <p class="sub">One line controls the whole color</p>
+      <div class="measure"><p>Remember CSS is the looks. Each of the four apps is the same engine in a different color — and the color is basically <em>one line</em>. In <code>my-brave-words/styles.css</code>:</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">my-brave-words/styles.css · line 7</span></div>
+<pre><code><span class="tok-key">--accent</span>: <span class="tok-num">#ffd166</span>;  <span class="tok-com">/* the gold that themes Brave Words */</span></code></pre>
+      </div>
+      <div class="measure"><p>That <code>--accent</code> is a <strong>variable</strong> — a named value reused all over the stylesheet. Change this one line and buttons, highlights, and accents all shift together. Here's the real accent color of each app in the family:</p></div>
+      <div class="apps">
+        <span class="app"><span class="sw" style="background:#ffd166"></span> My Brave Words · <code>#ffd166</code></span>
+        <span class="app"><span class="sw" style="background:#60A4CD"></span> My School Story · <code>#60A4CD</code></span>
+        <span class="app"><span class="sw" style="background:#a78bdb"></span> My Fast Brain · <code>#a78bdb</code></span>
+        <span class="app"><span class="sw" style="background:#7a4fae"></span> My Whole Story · <code>#7a4fae</code></span>
+      </div>
+
+      <div class="try">
+        <div class="h"><span class="pill">Try it</span> Two tiny, safe edits</div>
+        <ol>
+          <li>Open <code>my-brave-words/stories/the-big-mad.json</code> in your editor. Find the <code>"title"</code> near the top and change the English text to anything you like. Save, reload the app — the story's name changed, and you never touched code.</li>
+          <li>Open <code>my-brave-words/styles.css</code>, change <code>--accent</code> on line 7 to <code>#60A4CD</code> (the blue), save, reload. The whole app re-themes.</li>
+        </ol>
+        <div class="safe">💡 <strong>Can't break it:</strong> if anything looks off, undo (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) or, if you've committed, <code>git checkout .</code> puts everything back. Module 6 covers safe experimenting in depth.</div>
+      </div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: an engine app = <b>shell</b> (index.html) + <b>engine</b> (app.js) + <b>content</b> (stories/*.json) + <b>commerce</b> (family.js). The visible app renders into one empty <code>&lt;main&gt;</code>, and one <code>--accent</code> line sets the color.</div></div>
+    </section>
+
+    <!-- ============ MODULE 2 ============ -->
+    <section class="mod" id="m2">
+      <span class="mod-tag"><span class="num">2</span> A story is data</span>
+      <h2>Inside one story file</h2>
+      <div class="measure">
+        <p class="lead-in">This is the friendliest, most useful thing to understand: a story isn't code at all. It's a tidy list of <strong>labeled boxes</strong>. Change what's in a box, change the app.</p>
+        <p>Here's the real top of <code>the-big-mad.json</code>. Don't worry about the punctuation — read the labels:</p>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">my-brave-words/stories/the-big-mad.json</span></div>
+<pre><code>{
+  <span class="tok-key">"id"</span>: <span class="tok-str">"the-big-mad"</span>,
+  <span class="tok-key">"icon"</span>: <span class="tok-str">"🌩️"</span>,
+  <span class="mk">A</span><span class="tok-key">"title"</span>: { <span class="tok-key">"en"</span>: <span class="tok-str">"The Big Mad"</span>, <span class="tok-key">"es"</span>: <span class="tok-str">"El gran enojo"</span> },
+  <span class="tok-key">"tagline"</span>: {
+    <span class="tok-key">"en"</span>: {
+      <span class="mk">B</span><span class="tok-key">"literal"</span>:    <span class="tok-str">"A big mad feeling is real. It comes, and it goes."</span>,
+      <span class="tok-key">"figurative"</span>: <span class="tok-str">"The Big Mad is a storm cloud..."</span>,
+      <span class="tok-key">"simple"</span>:     <span class="tok-str">"A big mad comes. A big mad goes."</span>
+    }, <span class="tok-key">"es"</span>: { <span class="tok-com">/* the same three, in Spanish */</span> }
+  },
+  <span class="mk">C</span><span class="tok-key">"steps"</span>: [
+    { <span class="tok-key">"icon"</span>: <span class="tok-str">"🧱"</span>, <span class="tok-key">"art"</span>: <span class="tok-str">"assets/bm_fall.webp"</span>,
+      <span class="tok-key">"text"</span>: { <span class="tok-key">"en"</span>: { <span class="tok-key">"literal"</span>: <span class="tok-str">"I worked a long time on my tower..."</span> } } }
+  ]
+}</code></pre>
+      </div>
+      <ul class="reading">
+        <li><span class="mk">A</span><div><b>Everything is bilingual.</b> Almost every piece of text is a pair — <code>"en"</code> and <code>"es"</code>. That's how one file serves both languages. To fix a Spanish typo, you edit the <code>"es"</code> box right next to the English one.</div></li>
+        <li><span class="mk">B</span><div><b>Three reading levels.</b> Big feelings text comes in <code>literal</code>, <code>figurative</code>, and <code>simple</code> — that's what the "Literal" button in your app switches between. Same idea everywhere.</div></li>
+        <li><span class="mk">C</span><div><b>The pages are a list.</b> <code>steps</code> is the sequence of story pages. Each step has an icon, a picture (<code>art</code>), and its text. Add a step, add a page.</div></li>
+      </ul>
+
+      <p class="sub">The rest of the shape</p>
+      <div class="measure"><p>Further down, the same story file holds a few more labeled boxes — the parts that make it interactive:</p></div>
+      <ul class="plain">
+        <li><code>choice</code> — the decision point: a <code>prompt</code> and an <code>options</code> list. Each option is marked <code>good: true</code> or <code>good: false</code> and carries its own <code>outcome</code> text (what happens when a child picks it).</li>
+        <li><code>vocab</code> — the feelings word to learn: the word, a badge picture, a kid-friendly definition, and a little review quiz.</li>
+        <li><code>parent</code> — the grown-up corner: what was practiced, a conversation starter, and a link to the printable.</li>
+      </ul>
+      <div class="note measure"><b>Why this is the safe zone.</b> Editing a story never touches the engine. The worst that happens is a typo in a sentence — visible instantly, fixed instantly. This is where you can build real confidence.</div>
+
+      <div class="try">
+        <div class="h"><span class="pill">Try it</span> Rewrite an outcome</div>
+        <ol>
+          <li>In <code>the-big-mad.json</code>, scroll to <code>"choice"</code> and find the <code>options</code>.</li>
+          <li>Pick the <code>good: false</code> option and reword its <code>"outcome"</code> English text to be gentler.</li>
+          <li>Save, reload, play the story, and pick that choice to see your new words appear.</li>
+        </ol>
+        <div class="safe">💡 Keep the quote marks and commas exactly where they are — those are the "walls of the boxes." If the story fails to load, you likely deleted a <code>"</code> or <code>,</code>; undo and try again.</div>
+      </div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: a story is <b>data, not code</b> — labeled boxes, bilingual <code>en</code>/<code>es</code>, three reading levels, <code>steps</code> for pages, and <code>choice</code>/<code>vocab</code>/<code>parent</code> for the interactive parts. Editing content is the safe zone.</div></div>
+    </section>
+
+    <!-- ============ MODULE 3 ============ -->
+    <section class="mod" id="m3">
+      <span class="mod-tag"><span class="num">3</span> Two variations</span>
+      <h2>Same idea, packaged differently</h2>
+      <div class="measure">
+        <p class="lead-in">Once you can see "shell + engine + content," you'll spot it everywhere — even when it's dressed differently. Two of your apps are useful variations.</p>
+      </div>
+
+      <p class="sub">Eli Walks With Me — content is a conversation</p>
+      <div class="measure"><p>Eli has the <em>same</em> layered shape (a shell, an <code>app.js</code> engine, and <code>stories/*.json</code> content), but a story here is a scripted <strong>dialogue</strong> instead of pages. Look at how the content names its speakers and tags each line:</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">eli-walks-with-me/stories/the-kind-no.json</span></div>
+<pre><code><span class="mk">A</span><span class="tok-key">"speakers"</span>: {
+  <span class="tok-key">"eli"</span>:    { <span class="tok-key">"name"</span>: <span class="tok-str">"Eli"</span>,    <span class="tok-key">"kind"</span>: <span class="tok-str">"guide"</span> },
+  <span class="tok-key">"maya"</span>:   { <span class="tok-key">"name"</span>: <span class="tok-str">"Maya"</span>,   <span class="tok-key">"kind"</span>: <span class="tok-str">"child"</span> }
+},
+<span class="tok-key">"screens"</span>: [
+  { <span class="tok-key">"number"</span>: <span class="tok-num">1</span>, <span class="tok-key">"title"</span>: { <span class="tok-key">"en"</span>: <span class="tok-str">"We Finished It"</span> },
+    <span class="tok-key">"lines"</span>: [
+      { <span class="tok-key">"speaker"</span>: <span class="tok-str">"eli"</span>,
+        <span class="mk">B</span><span class="tok-key">"modes"</span>: [<span class="tok-str">"full-guide"</span>, <span class="tok-str">"light-guide"</span>, <span class="tok-str">"child-leads"</span>],
+        <span class="tok-key">"text"</span>: { <span class="tok-key">"en"</span>: <span class="tok-str">"..."</span> } }
+    ] }
+]</code></pre>
+      </div>
+      <ul class="reading">
+        <li><span class="mk">A</span><div><b>A cast list.</b> Each story declares who's speaking — Eli the guide, and the child. Lines then point at a speaker by name.</div></li>
+        <li><span class="mk">B</span><div><b>Guide levels are built in.</b> Each line lists which modes it appears in. That's how the same script plays as "Full Guide," "Light Guide," or "Child Leads" — the engine simply shows the lines whose <code>modes</code> match.</div></li>
+      </ul>
+
+      <p class="sub">Treasures That Teach — everything in one file</p>
+      <div class="measure"><p>Treasures folds the engine <em>and</em> the content into a single page, <code>stories.html</code>. (Its <code>index.html</code> is just the funder pitch page.) The stories live in a list that starts at line 497:</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">treasures-that-teach/stories.html · line 497</span></div>
+<pre><code><span class="tok-key">const</span> <span class="tok-tag">STORIES</span> = [
+  { <span class="tok-key">n</span>:<span class="tok-num">1</span>, <span class="tok-key">slug</span>:<span class="tok-str">'i-am-what-i-am'</span>, <span class="tok-key">tint</span>:<span class="tok-str">'#d7e4c8'</span>,
+    <span class="tok-key">title</span>:{<span class="tok-key">en</span>:<span class="tok-str">'I Am What I Am'</span>, <span class="tok-key">es</span>:<span class="tok-str">'Soy lo que soy'</span>},
+    <span class="tok-key">pages</span>:[
+      { <span class="mk">A</span><span class="tok-key">kind</span>:<span class="tok-str">'text'</span>, <span class="tok-key">t_en</span>:<span class="tok-str">"Zola's family moved to a new town..."</span>,
+        <span class="mk">B</span><span class="tok-key">t_literal_en</span>:<span class="tok-str">"Zola's family moved... Zola felt very nervous."</span> },
+      { <span class="tok-key">kind</span>:<span class="tok-str">'choice'</span>, <span class="tok-key">good_en</span>:<span class="tok-str">"Go as Zola..."</span> }
+    ] }
+]</code></pre>
+      </div>
+      <ul class="reading">
+        <li><span class="mk">A</span><div><b>Pages have a type.</b> <code>kind:'text'</code> is a story page; <code>kind:'choice'</code> is a decision. Same "list of pages" idea as the engine apps, just written a little differently.</div></li>
+        <li><span class="mk">B</span><div><b>The "Literal" toggle lives in the data.</b> The plain-language version of a figurative sentence sits right beside it as <code>t_literal_en</code>. The accessibility button just swaps which one shows.</div></li>
+      </ul>
+      <div class="measure"><p>That accessibility toolbar (Literal, dyslexia font, text size, dark mode, word-by-word narration) works by a simple trick you can now understand: each button flips a setting and <strong>remembers</strong> it in the browser's little memory, called <em>local storage</em>, under a key like <code>ttt_literal</code>. Next visit, it reads the memory and restores your choice.</p></div>
+
+      <div class="try">
+        <div class="h"><span class="pill">Try it</span> Meet the app's memory</div>
+        <ol>
+          <li>Open your Treasures app, press <kbd>F12</kbd> to open the browser's developer tools, and click the <strong>Application</strong> tab (Chrome/Edge) or <strong>Storage</strong> (Firefox).</li>
+          <li>Under <strong>Local Storage</strong>, find the keys starting with <code>ttt_</code>.</li>
+          <li>Toggle the "Aa" dyslexia-font button in the app and watch <code>ttt_font</code> change from <code>0</code> to <code>1</code>. That's the app writing to its own memory.</li>
+        </ol>
+      </div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: Eli is the layered shape with <b>dialogue</b> content (speakers + lines + guide <code>modes</code>); Treasures is the <b>one-file</b> shape (engine + a <code>STORIES</code> list together), and settings persist in <b>local storage</b>.</div></div>
+    </section>
+
+    <!-- ============ MODULE 4 ============ -->
+    <section class="mod" id="m4">
+      <span class="mod-tag"><span class="num">4</span> The big file</span>
+      <h2>The flagship: everything in one place</h2>
+      <div class="measure">
+        <p class="lead-in">My Brave Friends is your oldest and richest app, and it's the "one-file" shape taken to the extreme: a single <code>index.html</code> that is <strong>10,701 lines long</strong> — HTML, CSS, and all the JavaScript, together.</p>
+        <p>That sounds scary. It isn't, once you know it's the <em>same three ideas</em> from Module 1 (shell + engine + content) pasted into one file instead of separate ones. Here's a map of the whole file. The taller a region, the more of the file it takes up — click any region to see what's there:</p>
+      </div>
+
+      <div class="skyline">
+        <details class="region"><summary><span class="stripe"></span><span class="rl">The look: &lt;head&gt; + one giant &lt;style&gt;</span><span class="rr">3–1934</span></summary><div class="body">All the CSS for the entire app — colors and theme variables, the phone-shaped layout, calm mode, the responsive "zoom to fit" trick for big screens, and print styles. Nearly 1,900 lines of pure looks.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">The shell: 6 screens + all the pop-ups</span><span class="rr">1935–2831</span></summary><div class="body">The empty HTML boxes for the six views — <code>#intro</code>, <code>#home</code>, <code>#story</code>, <code>#reward</code>, <code>#profile</code>, <code>#family</code> — plus every modal (settings, voice browser, sign-in, PIN pad, story builder). Just like Module 1's shell, only bigger. The engine fills these in.</div></details>
+        <details class="region engine" open><summary><span class="stripe"></span><span class="rl">★ The Engine — the heart of the app</span><span class="rr">2842–7945</span></summary><div class="body">About 5,100 lines: the story data, the story-flow logic, narration, filters, and progress. This one <code>&lt;script&gt;</code> is where you'll spend your learning time. Its landmarks are broken out below.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">— STORIES (the content, inline)</span><span class="rr">3279–3976</span></summary><div class="body">Here the stories are written <em>directly inside</em> the file (not separate JSON files like the engine apps). Same idea — pages, choices, outcomes — just living in the big file. We look at it below.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">— STORY_META (Spanish + CASEL + ages)</span><span class="rr">3977–4700</span></summary><div class="body">A matching list that adds each story's Spanish text and its learning tags (which CASEL skill, which age band).</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">— STATE + the story-flow loop</span><span class="rr">4933–5645</span></summary><div class="body"><code>state</code> is the app's "where am I" memory. The loop <code>renderPage → selectChoice → tryAgain → nextPage</code> is the whole interactive experience. Short and readable — the best code to study.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">— speak() — the narration engine</span><span class="rr">6101–6253</span></summary><div class="body">Decides how each line is voiced: a parent's own recording, then cached audio, then pre-made files, then live text-to-speech. Advanced — save it for later.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">Commercial features + first-run flow</span><span class="rr">7946–9111</span></summary><div class="body">Paywall, parental gate, consent screens, and the sign-in/onboarding sequence.</div></details>
+        <details class="region"><summary><span class="stripe"></span><span class="rl">Family portal + accounts + checkout</span><span class="rr">9746–10606</span></summary><div class="body">The parent dashboard and the payment code — this is where <code>sanderslearning.com/.netlify/functions/checkout</code> is called (the line the CSP fix had to allow). Most advanced part; study last.</div></details>
+      </div>
+      <p class="legendline">▸ tip: in your editor, jump to any of these by pressing <kbd style="font-family:inherit">Ctrl</kbd>+<kbd style="font-family:inherit">G</kbd> and typing the line number.</p>
+
+      <p class="sub">The content looks familiar</p>
+      <div class="measure"><p>Here's a real story from inside the flagship. Compare it to Module 2 — it's the same concept (pages + choices + outcomes), just written as inline code instead of a separate file:</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">index.html · line 3279</span></div>
+<pre><code><span class="tok-key">const</span> <span class="tok-tag">STORIES</span> = [
+  {
+    <span class="tok-key">id</span>:<span class="tok-num">0</span>, <span class="tok-key">title</span>:<span class="tok-str">"Oops, I Did It"</span>, <span class="tok-key">emoji</span>:<span class="tok-str">"😬"</span>,
+    <span class="mk">A</span><span class="tok-key">pages</span>:[
+      { <span class="tok-key">char</span>:<span class="tok-str">"Leo"</span>, <span class="tok-key">text</span>:<span class="tok-str">"My painting is ruined!"</span> }
+    ],
+    <span class="mk">B</span><span class="tok-key">choices</span>:[
+      { <span class="tok-key">text</span>:<span class="tok-str">"Say sorry and help Leo start again."</span>, <span class="tok-key">good</span>:<span class="tok-num">true</span> },
+      { <span class="tok-key">text</span>:<span class="tok-str">"Pretend it didn't happen and walk away."</span>, <span class="tok-key">good</span>:<span class="tok-num">false</span> }
+    ],
+    <span class="mk">C</span><span class="tok-key">outcome</span>:{ <span class="tok-key">good</span>:<span class="tok-str">"Mia felt much better after saying sorry..."</span>,
+              <span class="tok-key">ok</span>:<span class="tok-str">"Leo looked sad and alone..."</span> }
+  }
+]</code></pre>
+      </div>
+      <ul class="reading">
+        <li><span class="mk">A</span><div><b>Pages</b> — the story panels, same as <code>steps</code> in the engine apps.</div></li>
+        <li><span class="mk">B</span><div><b>Choices</b> — two options, each flagged <code>good: true/false</code>.</div></li>
+        <li><span class="mk">C</span><div><b>Outcome</b> — the two endings: <code>good</code> (right pick) and <code>ok</code> (the gentle "try again" result).</div></li>
+      </ul>
+
+      <p class="sub">"Where am I?" — the state</p>
+      <div class="measure"><p>Every app needs to remember what's on screen. In the flagship it's one small object called <code>state</code> (line 4933):</p></div>
+      <div class="code-card">
+        <div class="code-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="file">index.html · line 4933</span></div>
+<pre><code><span class="tok-key">const</span> <span class="tok-tag">state</span> = {
+  <span class="tok-key">currentStory</span>: <span class="tok-num">null</span>,   <span class="tok-com">// which story is open</span>
+  <span class="tok-key">currentPage</span>: <span class="tok-num">0</span>,       <span class="tok-com">// which page we're on</span>
+  <span class="tok-key">choiceMade</span>: <span class="tok-num">false</span>,    <span class="tok-com">// has the child picked yet?</span>
+  <span class="tok-key">lang</span>: <span class="tok-str">'en'</span>            <span class="tok-com">// English or Spanish</span>
+};</code></pre>
+      </div>
+      <div class="measure"><p>Read it in English: "no story open yet, on page 0, no choice made, language is English." Every time you tap, the engine updates this little note and redraws. That's the entire mental model of how the app moves.</p></div>
+
+      <div class="try">
+        <div class="h"><span class="pill">Try it</span> Find and edit in the big file</div>
+        <ol>
+          <li>Open <code>index.html</code>, press <kbd>Ctrl</kbd>+<kbd>F</kbd>, and search for <code>const STORIES</code> — that jumps you to line 3279.</li>
+          <li>Change story <code>id:0</code>'s <code>title</code> from <code>"Oops, I Did It"</code> to anything.</li>
+          <li>Save and reload your local flagship. The story's name changed — in a 10,000-line file, you found and edited exactly the right spot.</li>
+        </ol>
+        <div class="safe">💡 <kbd>Ctrl</kbd>+<kbd>F</kbd> (find) is your best friend in a big file: see something on screen, search the file for those exact words, and you'll land on the code behind it.</div>
+      </div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: the flagship is the <b>one-file</b> shape at scale — head/style, the shell of 6 screens, then the engine (with <code>STORIES</code>, <code>state</code>, and the flow loop) and commerce, all in one file. It's the same ideas, just denser — and <kbd>Ctrl</kbd>+<kbd>F</kbd> navigates it.</div></div>
+    </section>
+
+    <!-- ============ MODULE 5 ============ -->
+    <section class="mod" id="m5">
+      <span class="mod-tag"><span class="num">5</span> How it ships</span>
+      <h2>The plumbing that gets it online</h2>
+      <div class="measure">
+        <p class="lead-in">A few small files show up in every app. You don't edit them often, but knowing what each does removes the last of the mystery — and these are exactly the pieces behind the fixes from earlier today.</p>
+      </div>
+      <ul class="plain">
+        <li><b><code>sw.js</code> — the offline cache.</b> The "service worker." It quietly saves the app so it still opens with a weak connection. The <code>mbf-v97</code> line inside is a version stamp; bumping it forces everyone onto the newest copy.</li>
+        <li><b><code>gen-csp.mjs</code> / <code>build-editions.mjs</code> — the security step at publish time.</b> These run when the app deploys and write the security rules (the "Content-Security-Policy") that say which code is allowed to run. <em>This is the file we fixed today</em> — it now handles line-ending differences so nothing gets wrongly blocked.</li>
+        <li><b><code>netlify.toml</code> — the publishing recipe.</b> Tells Netlify (your host) how to build the site, which folder to put online, and what to cache. A short settings file.</li>
+        <li><b><code>manifest.json</code> — the "install to phone" card.</b> Name, icon, and colors so the app can be added to a home screen and open like a real app.</li>
+        <li><b><code>functions/</code> — a tiny backend.</b> Small programs that run on the server, not in the browser. <code>tts.js</code> is the one that talks to the ElevenLabs voice service while keeping the secret key hidden from users.</li>
+      </ul>
+
+      <p class="sub">From your edit to the live site, in one breath</p>
+      <div class="note measure">You edit a file → you <code>git push</code> (send the change up) → Netlify notices, runs the build recipe (including the security step) → about a minute later, the live site updates. That's the whole pipeline you've been watching happen today.</div>
+
+      <div class="recap"><span class="ic">✓</span><div>You learned: <b>sw.js</b> (offline), the <b>CSP build step</b> (security at deploy — today's fix), <b>netlify.toml</b> (publishing recipe), <b>manifest.json</b> (installable), and <b>functions/</b> (hidden backend) — and how a push becomes a live update.</div></div>
+    </section>
+
+    <!-- ============ MODULE 6 ============ -->
+    <section class="mod" id="m6">
+      <span class="mod-tag"><span class="num">6</span> On your own</span>
+      <h2>Your exploring toolkit</h2>
+      <div class="measure">
+        <p class="lead-in">You now know enough to poke around any app with confidence. Here's how to do it safely and find your way.</p>
+      </div>
+
+      <p class="sub">Rule one: you can always get back</p>
+      <ul class="plain">
+        <li><b>Undo is instant:</b> <kbd>Ctrl</kbd>+<kbd>Z</kbd> reverses any edit you just made.</li>
+        <li><b>Git is a safety net:</b> before experimenting, your saved commit is a snapshot. <code>git checkout .</code> throws away un-saved changes and restores every file. Nothing you try between commits is permanent.</li>
+        <li><b>Start small and visible:</b> text and colors first — you'll see the result immediately, so mistakes are obvious and harmless.</li>
+      </ul>
+
+      <p class="sub">The browser's developer tools (your X-ray glasses)</p>
+      <div class="measure"><p>Press <kbd>F12</kbd> in any browser to open them. Three tabs are worth knowing:</p></div>
+      <ul class="plain">
+        <li><b>Elements</b> — the live HTML. Hover over a line and the matching thing highlights on the page. Great for "what is this box called?"</li>
+        <li><b>Console</b> — messages and errors the app prints. You saw this today: the red "Refused to execute inline script" lines were the console telling us exactly what was blocked.</li>
+        <li><b>Application → Local Storage</b> — the app's little memory (streaks, language, settings), in plain view.</li>
+      </ul>
+
+      <p class="sub">How to trace anything from screen to code</p>
+      <div class="note measure"><b>The move:</b> see something on screen → note the exact words it uses → open the file and <kbd>Ctrl</kbd>+<kbd>F</kbd> for those words → read the few lines around the match. Nearly every "how does <em>that</em> work?" is answered this way in under a minute.</div>
+
+      <p class="sub">Plain-English glossary</p>
+      <div class="gloss">
+        <div class="gterm"><b>HTML</b><span>The structure of a page — the boxes and text that exist.</span></div>
+        <div class="gterm"><b>CSS</b><span>The looks — colors, fonts, spacing, layout.</span></div>
+        <div class="gterm"><b>JavaScript / JS</b><span>The behavior — what happens when you tap or type.</span></div>
+        <div class="gterm"><b>variable</b><span>A named, reusable value — like <code>--accent</code> for a color.</span></div>
+        <div class="gterm"><b>function</b><span>A named action the code can run, like <code>renderPage()</code>.</span></div>
+        <div class="gterm"><b>array</b><span>A list, written in <code>[ ]</code> — e.g. the list of stories.</span></div>
+        <div class="gterm"><b>object</b><span>A set of labeled boxes, written in <code>{ }</code> — like one story.</span></div>
+        <div class="gterm"><b>JSON</b><span>A plain-text file of objects and arrays — how a story is stored.</span></div>
+        <div class="gterm"><b>local storage</b><span>The browser's small memory that remembers settings between visits.</span></div>
+        <div class="gterm"><b>service worker</b><span>Background helper (<code>sw.js</code>) that makes the app work offline.</span></div>
+        <div class="gterm"><b>CSP</b><span>Content-Security-Policy — the rule list of what code may run.</span></div>
+        <div class="gterm"><b>deploy</b><span>Publishing your change so the live site updates.</span></div>
+      </div>
+
+      <div class="recap"><span class="ic">★</span><div><b>You did it.</b> You can now open any of your apps, name what you're seeing, find the code behind anything on screen, and make safe edits. That's real literacy in your own product — start with the story files, and grow from there.</div></div>
+    </section>
+
+    <footer>
+      <svg class="arch" viewBox="0 0 24 28" aria-hidden="true"><path d="M1 27V13a11 11 0 0 1 22 0v14Z"/></svg>
+      A self-paced tour of the code behind the Sanders Learning apps. Built to be revisited — your story files are the friendliest place to keep practicing.
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // scroll progress bar
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var m=h.scrollHeight-h.clientHeight;bar.style.width=(m>0?(h.scrollTop/m*100):0)+'%';}
+  addEventListener('scroll',prog,{passive:true});addEventListener('resize',prog);prog();
+
+  // theme toggle (light <-> dark), building on the host theme
+  var root=document.documentElement, tb=document.getElementById('theme');
+  function current(){var e=root.getAttribute('data-theme');if(e)return e;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+  tb.addEventListener('click',function(){root.setAttribute('data-theme', current()==='dark'?'light':'dark');prog();});
+
+  // active-module highlighting in the table of contents
+  var links={}, sections=[];
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    var id=a.getAttribute('href').slice(1);links[id]=a;var s=document.getElementById(id);if(s)sections.push(s);
+  });
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          Object.keys(links).forEach(function(k){links[k].classList.remove('on');});
+          var on=links[e.target.id];if(on)on.classList.add('on');
+        }
+      });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){io.observe(s);});
+  }
+})();
+</script>
+
+</body></html>

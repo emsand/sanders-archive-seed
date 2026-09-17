@@ -1,0 +1,1104 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Posting Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#FAF6EC; --surface:#FFFFFF; --surface-alt:#F1EAD9; --border:#E3D8BE;
+    --text:#22190F; --text-muted:#786B57; --text-faint:#A99A80;
+    --mccray:#B87317; --mccray-soft:#F1DFC0;
+    --chillcrew:#D63D14; --chillcrew-soft:#F7D9CC;
+    --idea:#7A6FBE; --idea-soft:#E7E3F7;
+    --drafted:#2F6FA8; --drafted-soft:#DCEAF6;
+    --scheduled:#1E8577; --scheduled-soft:#D8EEE9;
+    --posted:#3F8F4F; --posted-soft:#DFF1DE;
+    --shadow: 0 1px 2px rgba(30,20,5,.06), 0 6px 20px rgba(30,20,5,.06);
+    --radius: 10px;
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17130D; --surface:#211B12; --surface-alt:#2B2317; --border:#3E3421;
+      --text:#F3EBDB; --text-muted:#B7A98D; --text-faint:#83745A;
+      --mccray:#E8A03D; --mccray-soft:#3B2E14;
+      --chillcrew:#FF6E45; --chillcrew-soft:#3C2015;
+      --idea:#B0A5EE; --idea-soft:#2A2547;
+      --drafted:#7FBCEE; --drafted-soft:#1B3145;
+      --scheduled:#5FD6C4; --scheduled-soft:#123330;
+      --posted:#8FDB9A; --posted-soft:#173622;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17130D; --surface:#211B12; --surface-alt:#2B2317; --border:#3E3421;
+    --text:#F3EBDB; --text-muted:#B7A98D; --text-faint:#83745A;
+    --mccray:#E8A03D; --mccray-soft:#3B2E14;
+    --chillcrew:#FF6E45; --chillcrew-soft:#3C2015;
+    --idea:#B0A5EE; --idea-soft:#2A2547;
+    --drafted:#7FBCEE; --drafted-soft:#1B3145;
+    --scheduled:#5FD6C4; --scheduled-soft:#123330;
+    --posted:#8FDB9A; --posted-soft:#173622;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;}
+  body{ background:var(--bg); color:var(--text); }
+  h1,h2,h3{ font-family:"Big Shoulders Display",system-ui,sans-serif; font-weight:800; letter-spacing:.01em; text-wrap:balance; margin:0; }
+  .mono{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; }
+  .wrap{ max-width:1080px; margin:0 auto; padding-inline:20px; }
+  a{ color:inherit; }
+
+  /* ---------- header ---------- */
+  header.top{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:var(--surface); border-bottom:1px solid var(--border);
+  }
+  .top-inner{ padding-block:14px; display:flex; flex-direction:column; gap:12px; }
+  .brand-row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .brand-row h1{ font-size:26px; }
+  .brand-row .tagline{ color:var(--text-muted); font-size:13px; }
+  .counts{ display:flex; gap:8px; flex-wrap:wrap; }
+  .count-chip{ background:var(--surface-alt); border:1px solid var(--border); border-radius:999px; padding:4px 10px; font-size:12px; color:var(--text-muted); white-space:nowrap; }
+  .count-chip b{ color:var(--text); font-family:"IBM Plex Mono",monospace; }
+
+  .pillbar{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .pillbar .label{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin-right:2px; }
+  .pill{
+    border:1px solid var(--border); background:var(--surface-alt); color:var(--text-muted);
+    border-radius:999px; padding:5px 12px; font-size:13px; cursor:pointer; font-family:inherit;
+  }
+  .pill:hover{ border-color:var(--text-faint); }
+  .pill.active{ background:var(--text); color:var(--bg); border-color:var(--text); }
+  .pill.active.mccray{ background:var(--mccray); border-color:var(--mccray); color:#fff; }
+  .pill.active.chillcrew{ background:var(--chillcrew); border-color:var(--chillcrew); color:#fff; }
+
+  .top-actions{ display:flex; gap:8px; align-items:center; }
+  button.cta{
+    background:var(--text); color:var(--bg); border:none; border-radius:8px;
+    padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  button.ghost{
+    background:none; border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer; font-family:inherit;
+  }
+
+  /* ---------- up next ---------- */
+  .upnext{ padding-block:14px; border-bottom:1px solid var(--border); }
+  .upnext h2{ font-size:15px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:8px; }
+  .upnext-row{ display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+  .upnext-card{
+    flex:0 0 auto; min-width:200px; max-width:240px; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:10px 12px; box-shadow:var(--shadow); border-left:4px solid var(--accent,var(--border));
+  }
+  .upnext-card .up-date{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--text-muted); }
+  .upnext-card .up-title{ font-weight:600; font-size:14px; margin-top:2px; }
+  .upnext-empty{ color:var(--text-faint); font-size:13px; }
+
+  /* ---------- tabs ---------- */
+  .tabs{ display:flex; gap:4px; padding-block:10px; }
+  .tab-btn{
+    background:none; border:none; font-family:"Big Shoulders Display",sans-serif; font-weight:800;
+    font-size:16px; letter-spacing:.03em; text-transform:uppercase; color:var(--text-faint);
+    padding:8px 14px; cursor:pointer; border-bottom:3px solid transparent;
+  }
+  .tab-btn.active{ color:var(--text); border-bottom-color:var(--text); }
+
+  main{ padding-block:20px 60px; }
+  section[data-panel]{ display:flex; flex-direction:column; gap:26px; }
+
+  /* ---------- quick add ---------- */
+  .quickadd{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;
+  }
+  .quickadd h3{ font-size:16px; }
+  .qa-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+  .field{ display:flex; flex-direction:column; gap:4px; }
+  .field label{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); }
+  .field input, .field select, .field textarea{
+    background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:7px 9px;
+    font-family:inherit; font-size:13px; color:var(--text); width:100%;
+  }
+  .field textarea{ resize:vertical; min-height:60px; }
+
+  /* ---------- calendar ---------- */
+  .cal-group h2{ font-size:14px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+  .cal-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+
+  .post-card{
+    background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent,var(--border));
+    border-radius:var(--radius); box-shadow:var(--shadow); padding:12px 14px; display:flex; flex-direction:column; gap:8px;
+  }
+  .post-top{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .post-meta{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); }
+  .post-date{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--text-muted); white-space:nowrap; }
+  .post-title{ font-weight:700; font-size:15px; line-height:1.25; }
+  .status-pill{ font-size:11px; padding:3px 9px; border-radius:999px; font-weight:600; white-space:nowrap; }
+  .status-idea{ background:var(--idea-soft); color:var(--idea); }
+  .status-drafted{ background:var(--drafted-soft); color:var(--drafted); }
+  .status-scheduled{ background:var(--scheduled-soft); color:var(--scheduled); }
+  .status-posted{ background:var(--posted-soft); color:var(--posted); }
+
+  details.body-copy{ font-size:13px; }
+  details.body-copy summary{ cursor:pointer; color:var(--text-muted); font-size:12px; }
+  .caption-block{ white-space:pre-wrap; margin-top:8px; line-height:1.5; }
+  .hashtag-block{ font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--text-muted); margin-top:8px; word-break:break-word; }
+  .pinned-block{ margin-top:8px; font-size:12.5px; color:var(--text-muted); border-left:2px solid var(--border); padding-left:8px; }
+  .asset-block{ margin-top:8px; padding:8px 10px; background:var(--surface-alt); border:1px solid var(--border); border-radius:8px; }
+  .asset-block .mono{ font-size:11.5px; color:var(--text-muted); word-break:break-all; }
+  .asset-block a{ font-size:12.5px; font-weight:600; text-decoration:underline; }
+  .card-actions{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  button.copy-btn{
+    background:var(--surface-alt); border:1px solid var(--border); border-radius:6px; color:var(--text);
+    font-size:11.5px; padding:5px 9px; cursor:pointer; font-family:inherit; position:relative;
+  }
+  button.copy-btn.copied{ background:var(--posted-soft); color:var(--posted); border-color:var(--posted); }
+  select.status-select{
+    background:var(--surface-alt); border:1px solid var(--border); border-radius:6px; padding:5px 7px;
+    font-size:11.5px; font-family:inherit; color:var(--text);
+  }
+
+  /* ---------- tracker ---------- */
+  .kanban{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media (max-width:760px){ .kanban{ grid-template-columns:1fr; } }
+  .kcol{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .kcol-head{ display:flex; align-items:center; justify-content:space-between; padding-bottom:6px; border-bottom:3px solid var(--accent2,var(--border)); }
+  .kcol-head h3{ font-size:16px; text-transform:uppercase; }
+  .kcol-count{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--text-muted); }
+  .kcol-body{ display:flex; flex-direction:column; gap:10px; }
+  .kcol-empty{ color:var(--text-faint); font-size:12px; padding:10px; border:1px dashed var(--border); border-radius:8px; }
+
+  /* ---------- library ---------- */
+  .lib-brand h2{ font-size:20px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .lib-brand h2 .swatch{ width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .lib-kind{ margin-bottom:16px; }
+  .lib-kind h3{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:8px; }
+  .lib-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+  .lib-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:12px 14px; display:flex; flex-direction:column; gap:6px;
+  }
+  .lib-card .lib-title{ font-weight:700; font-size:14px; }
+  .lib-card .lib-content{ white-space:pre-wrap; font-size:12.5px; color:var(--text-muted); line-height:1.5; max-height:180px; overflow-y:auto; }
+  .lib-search{ margin-bottom:14px; }
+  .lib-search input{
+    width:100%; max-width:320px; background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:8px 12px; font-family:inherit; font-size:13px; color:var(--text);
+  }
+
+  .loading, .nodb{ padding:60px 20px; text-align:center; color:var(--text-muted); }
+  .toast{
+    position:fixed; bottom:calc(16px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%);
+    background:var(--text); color:var(--bg); padding:8px 16px; border-radius:999px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:50;
+  }
+  .toast.show{ opacity:1; }
+  [hidden]{ display:none !important; }
+</style>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand-row">
+      <div>
+        <h1>Posting Desk</h1>
+        <div class="tagline">McCray Learning Lab + Chill Crew, one shared calendar</div>
+      </div>
+      <div class="counts" id="countChips"></div>
+    </div>
+    <div class="pillbar" id="brandPills">
+      <span class="label">Brand</span>
+    </div>
+    <div class="pillbar" id="statusPills">
+      <span class="label">Status</span>
+    </div>
+    <div class="top-actions">
+      <button class="cta" id="toggleAdd" type="button">+ New post</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="quickadd" id="quickAdd" hidden>
+    <h3>New post</h3>
+    <form id="addForm">
+      <div class="qa-grid">
+        <div class="field"><label for="qa-brand">Brand</label>
+          <select id="qa-brand" required>
+            <option value="mccray">McCray Learning Lab</option>
+            <option value="chillcrew">Chill Crew</option>
+          </select>
+        </div>
+        <div class="field"><label for="qa-category">Category</label><input id="qa-category" placeholder="episode, spotlight, community…" required></div>
+        <div class="field"><label for="qa-platform">Platform</label><input id="qa-platform" placeholder="Instagram, YouTube…" required></div>
+        <div class="field"><label for="qa-status">Status</label>
+          <select id="qa-status">
+            <option value="idea">Idea</option>
+            <option value="drafted">Drafted</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="posted">Posted</option>
+          </select>
+        </div>
+        <div class="field"><label for="qa-datelabel">Date (label)</label><input id="qa-datelabel" placeholder="Thu Oct 15"></div>
+        <div class="field"><label for="qa-sortdate">Date (for sorting)</label><input id="qa-sortdate" type="date"></div>
+      </div>
+      <div class="field"><label for="qa-title">Title</label><input id="qa-title" placeholder="Post title" required></div>
+      <div class="field"><label for="qa-caption">Caption</label><textarea id="qa-caption" placeholder="Full caption text…"></textarea></div>
+      <div class="qa-grid">
+        <div class="field"><label for="qa-hashtags">Hashtags</label><input id="qa-hashtags" placeholder="#ChillCrew #Anime"></div>
+        <div class="field"><label for="qa-pinned">Pinned comment</label><input id="qa-pinned" placeholder="optional"></div>
+      </div>
+      <div class="card-actions">
+        <button class="cta" type="submit">Add post</button>
+        <button class="ghost" type="button" id="cancelAdd">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap upnext">
+  <h2>Up next</h2>
+  <div class="upnext-row" id="upNextRow"></div>
+</div>
+
+<div class="wrap tabs">
+  <button class="tab-btn active" data-panel="calendar">Calendar</button>
+  <button class="tab-btn" data-panel="tracker">Tracker</button>
+  <button class="tab-btn" data-panel="library">Library</button>
+</div>
+
+<main class="wrap">
+  <div id="loadingMsg" class="loading">Loading the posting desk…</div>
+
+  <section data-panel="calendar" hidden></section>
+  <section data-panel="tracker" hidden></section>
+  <section data-panel="library" hidden></section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STATUSES = ["idea","drafted","scheduled","posted"];
+  var STATUS_LABEL = {idea:"Idea", drafted:"Drafted", scheduled:"Scheduled", posted:"Posted"};
+  var BRAND_LABEL = {mccray:"McCray Learning Lab", chillcrew:"Chill Crew"};
+
+  // ---------------------------------------------------------------
+  // Real seed content. McCray Learning Lab captions/hashtags are
+  // verbatim from facebook-kit/CAPTIONS.md (Aug 17, 2026 truth-in-copy
+  // rule: 25 stories, six free forever). Chill Crew captions are
+  // verbatim from docs-as-received/ChillCrew_Social_Copy_Pack.md, with
+  // every date recomputed against the real Oct 1, 2026 premiere
+  // (CHILL-CREW-CURRENT.md, updated Sep 17 — pushed back two weeks from
+  // the pack's original Sep 17 dates: +7 on Sep 12, +7 again on Sep 17).
+  // ---------------------------------------------------------------
+
+  var MCCRAY_ANNOUNCEMENT = "Every kid runs into moments bigger than they are. A missed shot, the night before a new school, a friend who suddenly goes quiet. 💛\n\nThe McCray Learning Lab turns those moments into short, warm story-comics kids can play through on their own or right beside a grown-up. A friendly voice reads every word out loud, and, one calm choice at a time, they rehearse the skill for real life.\n\n25 stories. Read aloud. Six free forever, no account needed.\n▶️ Start free: mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_WHATSINSIDE = "What's inside every McCray Learning Lab comic? 👇\n\n🔊 Read aloud to every child\n⭐ A Word Power vocabulary moment\n👆 Tap to play, no reading required\n🔒 Private: no ads, no tracking\n💛 Warm, and always on the child's side\n\nSix stories free forever → mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_KAI = "New kid. Big dreams. Loud doubts. ⚡🏀\n\nKai has three weeks until basketball tryouts, and he's behind. Level Up Your Mind Game is the story of how he trains the one thing most players never do: the mind game. 🧠\n\nA growth-mindset comic for ages 10-16. Read aloud, and free forever.\n▶️ mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_MICAH = "When Micah's dog Biscuit dies, the water bowl by the door is still full. 💛\n\nKeep the Love is a gentle story about grief. Auntie Nia doesn't try to make the sad go away. She shows Micah something truer: love doesn't leave. We learn to carry it.\n\nA tender read-aloud for ages 6-12, part of the Lab membership. Start with the six free stories and see if the Lab is your family's kind of place.\n▶️ mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_MALIK = "Malik really wants to finish his first big chapter book. 📖 …but every time, the tablet lights up. 📱\n\nThe Finish Muscle is about focus and reading stamina, built one page at a time. For ages 7-11, read aloud, in the Lab membership.\n▶️ Start with the free stories: mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_RILEY = "Riley's jump shot won't fall. 🏀 Her coach says the fix isn't in her hands. It's in her head.\n\nTrain Like a Champion is a growth-mindset sports story for ages 7-11, guided by Sprout. Read aloud, and free forever.\n▶️ mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_DEJA = "Every tricky word is a case to crack. 🔎\n\nIn Word Detective, Deja turns reading into detective work: clues, hunches, and \"aha!\" moments on every page. For ages 6-10, read aloud, in the Lab membership.\n▶️ Start with the free stories: mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_REEL_KIDS = "Watch what happens when a kid picks the \"wrong\" answer. 👀\n\nNothing breaks. Nobody's scolded. It just says \"Not quite, try again!\" and lets them try. That's the whole idea: a safe place to practice a big feeling before it happens for real. 💛\n\nA friendly voice reads every word, and the kid makes the choices. 🔊👆 No reading required, and six full stories are free forever, no sign-up at all.\n▶️ mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_REEL_GROWNUPS = "This one's not for your kid. It's for you. 🍎\n\nYour child comes home deflated. What do you say first? The Grown-Up stories put you in the choice seat, and if the first thing you'd say isn't the one that helps, you just… try again. No judgment, no lecture.\n\nPractice the hard conversations before you're in one. The Grown-Up series is part of the Lab membership; the six free stories show you exactly how it feels.\n▶️ mccraylearninglab.com (IG: link in bio)";
+  var MCCRAY_STORYFRAME = "Story-comics for big feelings 💛\n25 stories · six free forever · read aloud\n👆 Tap to start (add the link sticker)";
+
+  var SEED_POSTS = [
+    // ---- McCray Learning Lab: 2-week evergreen posting rhythm ----
+    {brand:"mccray", category:"Announcement", platform:"Facebook + Instagram", title:"Big Feelings (Announcement)", dateLabel:"Wk1 Mon", status:"drafted", caption:MCCRAY_ANNOUNCEMENT, hashtags:"#McCrayLearningLab #SEL #GrowthMindset #ReadAloud #KidsBooks"},
+    {brand:"mccray", category:"Gameplay Reel", platform:"Facebook + Instagram Reel", title:"Gameplay Reel — Word Detective", dateLabel:"Wk1 Tue", status:"drafted", caption:MCCRAY_REEL_KIDS, hashtags:"#McCrayLearningLab #ReadingComprehension #EarlyReaders #Phonics"},
+    {brand:"mccray", category:"Spotlight · FREE", platform:"Facebook + Instagram", title:"Spotlight — Level Up Your Mind Game (Kai)", dateLabel:"Wk1 Wed", status:"drafted", caption:MCCRAY_KAI, hashtags:"#McCrayLearningLab #YouthBasketball #KidsSports #MindsetMatters"},
+    {brand:"mccray", category:"What's Inside", platform:"Instagram", title:"What's Inside Every Comic?", dateLabel:"Wk1 Thu", status:"drafted", caption:MCCRAY_WHATSINSIDE, hashtags:"#McCrayLearningLab #EdTechForKids #LearningThroughStories"},
+    {brand:"mccray", category:"Spotlight · Membership", platform:"Facebook + Instagram", title:"Spotlight — Keep the Love (Micah)", dateLabel:"Wk1 Fri", status:"drafted", caption:MCCRAY_MICAH, hashtags:"#McCrayLearningLab #ChildhoodGrief #GriefSupport #PetLoss"},
+    {brand:"mccray", category:"Story", platform:"Facebook + Instagram Story", title:"Story Frame (link sticker)", dateLabel:"Wk1 Sat", status:"drafted", caption:MCCRAY_STORYFRAME, hashtags:"#McCrayLearningLab #SEL"},
+    {brand:"mccray", category:"Spotlight · Membership", platform:"Facebook + Instagram", title:"Spotlight — Word Detective (Deja)", dateLabel:"Wk2 Mon", status:"drafted", caption:MCCRAY_DEJA, hashtags:"#McCrayLearningLab #ReadingComprehension #EarlyReaders"},
+    {brand:"mccray", category:"Gameplay Reel", platform:"Facebook + Instagram Reel", title:"Gameplay Reel — Keep the Love", dateLabel:"Wk2 Tue", status:"drafted", caption:MCCRAY_REEL_KIDS, hashtags:"#McCrayLearningLab #ChildhoodGrief #GriefSupport"},
+    {brand:"mccray", category:"Spotlight · Membership", platform:"Instagram", title:"Spotlight — The Finish Muscle (Malik)", dateLabel:"Wk2 Wed", status:"drafted", caption:MCCRAY_MALIK, hashtags:"#McCrayLearningLab #ReadingStamina #ScreenTimeDoneRight"},
+    {brand:"mccray", category:"What's Inside", platform:"Facebook", title:"What's Inside (Re-share)", dateLabel:"Wk2 Thu", status:"drafted", caption:MCCRAY_WHATSINSIDE, hashtags:"#McCrayLearningLab #EdTechForKids"},
+    {brand:"mccray", category:"Spotlight · FREE", platform:"Facebook + Instagram", title:"Spotlight — Train Like a Champion (Riley)", dateLabel:"Wk2 Fri", status:"drafted", caption:MCCRAY_RILEY, hashtags:"#McCrayLearningLab #YouthBasketball #MindsetMatters"},
+    {brand:"mccray", category:"Story", platform:"Facebook + Instagram Story", title:"Story Frame (link sticker)", dateLabel:"Wk2 Sat", status:"drafted", caption:MCCRAY_STORYFRAME, hashtags:"#McCrayLearningLab #SEL"},
+
+    // ---- Chill Crew: trailer / launch ----
+    {brand:"chillcrew", category:"Trailer", platform:"YouTube (channel trailer)", title:"Season One Trailer (60s)", dateLabel:"Pin before launch week", sortDate:"2026-09-25", status:"drafted",
+      caption:"CHILL CREW — Season One Trailer\n\nFour kids at King Middle. Four Flares. One school that keeps trying to put a band on it.\nEpisode 1 premieres Thursday, October 1 at 4 pm. Short every Tuesday. Episode every Thursday.\nSeason One playlist: [link]\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation #ShonenAnime #IndieAnimation"},
+    {brand:"chillcrew", category:"Trailer", platform:"TikTok · Reels · Shorts", title:"Season One Trailer (9:16)", dateLabel:"Mon Sep 28", sortDate:"2026-09-28", status:"scheduled",
+      caption:"the fire was never the problem.\n\nnew animated series. episode 1 · oct 1 · link in bio.", hashtags:"#ChillCrew #Anime #Animation #ShonenAnime #IndieAnimation #BlackAnimation #AnimeShorts"},
+    {brand:"chillcrew", category:"Trailer", platform:"TikTok · Reels", title:"Trailer Re-cut (15s)", dateLabel:"Wed Sep 30", sortDate:"2026-09-30", status:"scheduled",
+      caption:"four seconds. that's the warning you get.\n\noct 1. 4 pm. [link]", hashtags:"#ChillCrew #Anime #Animation #AnimeEdit #ShonenAnime"},
+
+    // ---- Chill Crew: Shorts (every Tuesday, 2 days before each episode) ----
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 1 — Four Seconds Early", dateLabel:"Tue Sep 29", sortDate:"2026-09-29", status:"scheduled",
+      caption:"she felt it 4 seconds early.\n\nnobody counts. he does.\nepisode 1 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #ShonenAnime #AnimeShorts #BlackAnimation",
+      pinned:"what colour would yours be? 🔥⚡🌫️🪨 — ep 1 thursday 4 pm."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 2 — Happy Is A Flare Too", dateLabel:"Tue Oct 6", sortDate:"2026-10-06", status:"scheduled",
+      caption:"happy is a flare too.\n\nhe wasn't angry. that's the point.\nepisode 2 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #AnimeShorts #ShonenAnime",
+      pinned:"davonte's is the one nobody takes seriously. watch what it does in ep 2."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 3 — Where Is It Right Now", dateLabel:"Tue Oct 13", sortDate:"2026-10-13", status:"scheduled",
+      caption:"he could read everyone but himself.\n\nepisode 3 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #AnimeShorts #IndieAnimation",
+      pinned:"\"where is it right now?\" — try answering that about yourself. out loud. it's harder than it looks."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 4 — Only Works If Both Calm", dateLabel:"Tue Oct 20", sortDate:"2026-10-20", status:"scheduled",
+      caption:"it only works if you're both calm.\n\nfire and lightning. same target.\nepisode 4 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #AnimeEdit #ShonenAnime",
+      pinned:"the combo is the first time two flares touch on purpose. ep 4 thursday."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 5 — She Could Have", dateLabel:"Tue Oct 27", sortDate:"2026-10-27", status:"scheduled",
+      caption:"she could have. she didn't.\n\nepisode 5 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #AnimeShorts #BlackAnimation",
+      pinned:"the shover from episode 1 comes back. ep 5."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 6 — Quiet Isn't Okay", dateLabel:"Tue Nov 3", sortDate:"2026-11-03", status:"scheduled",
+      caption:"quiet isn't the same as okay.\n\nkeisha's band is the oldest. look at her arm in every episode so far.\nepisode 6 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #IndieAnimation #AnimeShorts",
+      pinned:"go back to ep 1, the yard scene, her fingertips. it's been there the whole time."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 7 — She Took It Off", dateLabel:"Tue Nov 10", sortDate:"2026-11-10", status:"scheduled",
+      caption:"she took it off.\n\nepisode 7 thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #ShonenAnime #AnimeEdit",
+      pinned:"four bands. three red. one in pieces. ep 7 thursday."},
+    {brand:"chillcrew", category:"Short", platform:"TikTok · IG Reels · YT Shorts", title:"Short 8 — Whole School Waited", dateLabel:"Tue Nov 17", sortDate:"2026-11-17", status:"scheduled",
+      caption:"the whole school waited for her to blow.\n\nseason finale thursday. [link]", hashtags:"#ChillCrew #Anime #Animation #ShonenAnime #AnimeShorts #BlackAnimation",
+      pinned:"stay through the credits."},
+
+    // ---- Chill Crew: Episodes (every Thursday, 4pm) ----
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 1 — \"Blowout\"", dateLabel:"Thu Oct 1, 4pm", sortDate:"2026-10-01", status:"scheduled",
+      caption:"Jada's locker is glowing before anyone touches her. By the time the hallway is on fire, someone has already counted four seconds.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"who counted? — ep 2 thursday, short tuesday."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 2 — \"The Vent\"", dateLabel:"Thu Oct 8, 4pm", sortDate:"2026-10-08", status:"scheduled",
+      caption:"Eric's drill has one rule: let it out on purpose, before it does it for you. Davonte proves happy counts too.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"\"vent\" means something different now. ep 3 thursday."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 3 — \"Fog\"", dateLabel:"Thu Oct 15, 4pm", sortDate:"2026-10-15", status:"scheduled",
+      caption:"Eric can call everyone's state from across the yard. Amber. Amber. Dark. Then his own goes and nobody's calling it.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"where is it right now? ep 4 thursday."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 4 — \"Combo\"", dateLabel:"Thu Oct 22, 4pm", sortDate:"2026-10-22", status:"scheduled",
+      caption:"Fire and lightning on one target. It works exactly once, and only when both of them are calm.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"the shover is back next week. ep 5."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 5 — \"The Choice\"", dateLabel:"Thu Oct 29, 4pm", sortDate:"2026-10-29", status:"scheduled",
+      caption:"The kid from the hallway is standing in front of her again. Jada's fists open.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"she could have. ep 6 thursday — look at keisha's arm."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 6 — \"Stone\"", dateLabel:"Thu Nov 5, 4pm", sortDate:"2026-11-05", status:"scheduled",
+      caption:"Keisha hasn't blinked in the whole shot, and her jaw is grey. The crew finally sees what the band has been doing since episode one.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"quiet isn't the same as okay. ep 7 thursday."},
+    {brand:"chillcrew", category:"Episode", platform:"YouTube", title:"Ep. 7 — \"Dampener\"", dateLabel:"Thu Nov 12, 4pm", sortDate:"2026-11-12", status:"scheduled",
+      caption:"Four bands on one table. Three lights red. One in pieces.\nSeason One playlist: [link]\nShort Tuesday. Episode Thursday.\nMade by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"finale thursday. stay through the credits."},
+    {brand:"chillcrew", category:"Episode · Finale", platform:"YouTube", title:"Ep. 8 — \"Shape It\" (Season Finale)", dateLabel:"Thu Nov 19, 4pm", sortDate:"2026-11-19", status:"scheduled",
+      caption:"Midday, the courtyard, dead quiet, and Jada in the middle of it with her hand up. The whole school waits for her to blow.\nThank you for watching Season One. Made by McCray Learning Lab.", hashtags:"#ChillCrew #Anime #Animation",
+      pinned:"who's the man at the end? — season two."},
+
+    // ---- Chill Crew: Season Two teasers, community, character cards, email ----
+    {brand:"chillcrew", category:"Teaser", platform:"YouTube (public upload)", title:"Season Two Teaser (16:9)", dateLabel:"Sun Nov 22", sortDate:"2026-11-22", status:"scheduled",
+      caption:"Season Two teaser, public upload.", hashtags:"#ChillCrew #Anime #Animation", pinned:"who's the man at the end? — season two."},
+    {brand:"chillcrew", category:"Teaser", platform:"TikTok · Reels · Shorts", title:"Season Two Teaser (9:16)", dateLabel:"Tue Nov 24", sortDate:"2026-11-24", status:"scheduled",
+      caption:"Season Two teaser, public upload.", hashtags:"#ChillCrew #Anime #Animation", pinned:"who's the man at the end? — season two."},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community · IG Stories", title:"Poll — Who's Your Flare?", dateLabel:"Mon Sep 28", sortDate:"2026-09-28", status:"scheduled",
+      caption:"Who's your Flare? 🔥 fire · ⚡ lightning · 🌫️ mist · 🪨 stone", hashtags:""},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community", title:"Community Still — Episode 1 Teaser", dateLabel:"Mon Sep 28", sortDate:"2026-09-28", status:"scheduled",
+      caption:"One still from next episode. No caption.", hashtags:""},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community · IG Stories", title:"Community Still — Episode 2 Teaser", dateLabel:"Sun Oct 4", sortDate:"2026-10-04", status:"scheduled",
+      caption:"One still from next episode. No caption.", hashtags:""},
+    {brand:"chillcrew", category:"Community", platform:"TikTok · Instagram", title:"Character Card — Eric", dateLabel:"Mon Oct 5", sortDate:"2026-10-05", status:"scheduled",
+      caption:"Character card: Eric — video format.", hashtags:"#ChillCrew #Anime #Animation"},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community", title:"Text Post — Four Seconds Early", dateLabel:"~Fri Oct 16", sortDate:"2026-10-16", status:"drafted",
+      caption:"Four seconds early. Say it back to us in the comments and tell us when you caught yours this week.", hashtags:""},
+    {brand:"chillcrew", category:"Community", platform:"TikTok · Instagram", title:"Character Card — Davonte", dateLabel:"Mon Oct 12", sortDate:"2026-10-12", status:"scheduled",
+      caption:"Character card: Davonte — video format.", hashtags:"#ChillCrew #Anime #Animation"},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community · IG Stories", title:"Poll — Which Drill Would You Fail?", dateLabel:"~Sun Oct 18", sortDate:"2026-10-18", status:"scheduled",
+      caption:"Which drill would you fail? the count · the vent · the read · the combo", hashtags:""},
+    {brand:"chillcrew", category:"Community", platform:"TikTok · Instagram", title:"Character Card — Keisha (HOLD)", dateLabel:"Sun Oct 18 — hold", sortDate:null, status:"idea",
+      caption:"Character card: Keisha — HOLD, she's the reveal. Do not post before the crew sees her Stone extent (Ep. 6, airs Nov 5).", hashtags:"#ChillCrew #Anime #Animation"},
+    {brand:"chillcrew", category:"Community", platform:"YouTube Community", title:"Text Post — Finale Week", dateLabel:"~Mon Nov 16", sortDate:"2026-11-16", status:"drafted",
+      caption:"Eight episodes. Four Flares. One school. Finale Thursday, stay through the credits.", hashtags:""},
+    {brand:"chillcrew", category:"Outreach", platform:"Email", title:"Educator / Parent Email", dateLabel:"Wed Sep 30", sortDate:"2026-09-30", status:"scheduled",
+      caption:"Subject: A middle-school anime that's secretly the CASEL five\n\nHi [name],\n\nI make an animated series called Chill Crew. It's a shonen-style show about four kids at a middle school whose emotions are visible — fire, lightning, mist, stone — four seconds before they get out of hand. Each of the eight episodes is built on one CASEL competency; the kids never hear the word \"competency,\" they just watch a crew teach each other to catch it, vent it, and shape it.\n\nEpisode 1 premieres this Thursday, October 1, at 4 pm: [link]. Episodes are 90 seconds. The attached one-pager maps each episode to its competency with a discussion prompt you can use the same day.\n\nIf it's useful, share it with your grade team or post it for families. If it's not, tell me why — the season is written but the edit isn't locked.\n\nElla Sanders\nMcCray Learning Lab", hashtags:""}
+  ];
+
+  // ---------------------------------------------------------------
+  // v2 seed content, added after a facebook-kit/reels + spotlights +
+  // script-cards audit. Kept as separate arrays (not merged into
+  // SEED_POSTS/SEED_LIBRARY above) so the meta/seeded_v2 guard below
+  // can add just this batch to a desk that already ran the v1 seed,
+  // without re-adding the original set.
+  // ---------------------------------------------------------------
+
+  // Patches onto ALREADY-SEEDED posts (matched by title): real asset
+  // file paths from facebook-kit/, plus the shorter baked-in spotlight
+  // hooks (distinct wording from the long-form caption already seeded).
+  var ASSET_PATCHES = [
+    {title:"Big Feelings (Announcement)", assetLink:"facebook-kit/fb-post-big-feelings.png"},
+    {title:"Gameplay Reel — Word Detective", assetLink:"facebook-kit/reels/reel-word-detective.mp4", notes:"20.6s, playful whimsical music bed, ‑15 LUFS."},
+    {title:"Gameplay Reel — Keep the Love", assetLink:"facebook-kit/reels/reel-keep-the-love.mp4", notes:"20.6s, warm empathetic piano bed, ‑15 LUFS."},
+    {title:"Spotlight — Level Up Your Mind Game (Kai)", assetLink:"facebook-kit/spotlights/spotlight-level-up.png", notes:"Baked-in image hook: \"New kid, big dreams, loud doubts, and three weeks to basketball tryouts.\""},
+    {title:"Spotlight — Keep the Love (Micah)", assetLink:"facebook-kit/spotlights/spotlight-keep-the-love.png", notes:"Baked-in image hook: \"When Micah's dog dies, he learns that love doesn't leave. We learn to carry it.\""},
+    {title:"Spotlight — The Finish Muscle (Malik)", assetLink:"facebook-kit/spotlights/spotlight-finish-muscle.png", notes:"Baked-in image hook: \"Malik wants to finish his first big chapter book, one page at a time.\""},
+    {title:"Spotlight — Train Like a Champion (Riley)", assetLink:"facebook-kit/spotlights/spotlight-champion.png", notes:"Baked-in image hook: \"Riley's jump shot won't fall, until she trains the muscle most players skip.\""},
+    {title:"Spotlight — Word Detective (Deja)", assetLink:"facebook-kit/spotlights/spotlight-word-detective.png", notes:"Baked-in image hook: \"Deja cracks the case of tricky words, turning every page into a clue.\""},
+    {title:"What's Inside Every Comic?", assetLink:"facebook-kit/fb-post-whats-inside.png"},
+    {title:"What's Inside (Re-share)", assetLink:"facebook-kit/fb-post-whats-inside.png"},
+    {title:"Story Frame (link sticker)", assetLink:"facebook-kit/fb-story.png"}
+  ];
+
+  // New posts: the 4 curated Reels with no existing calendar slot, plus
+  // the bilingual "three new stories" launch Reel (Corner We Fixed / Why
+  // Door / Heard — not covered in any caption seeded so far).
+  var MCCRAY_LAUNCH_REEL_EN = "NEW AT THE McCRAY LEARNING LAB ✨\n\nThree New Stories — Notice. Wonder. Speak up.\n\n\"The Corner We Fixed\" — We solve it together\n\"The Why Door\" — I wonder\n\"Heard\" — I can do it\n\nWatch Marcus decide what to do next: blurt it out in the middle of the game, or ask Coach for a minute and use the three steps? (Try again gets him there.)\n\nThree new stories. One library of brave skills.\n▶️ mccraylearninglab.com (IG: link in bio)\n＋ Follow for a new story every week";
+  var MCCRAY_LAUNCH_REEL_ES = "NUEVO EN THE McCRAY LEARNING LAB ✨\n\nTres cuentos nuevos — Fíjate. Pregunta. Alza la voz.\n\n\"El rincón que arreglamos\" — Lo resolvemos juntos\n\"La puerta del porqué\" — Me pregunto\n\"Escuchado\" — Yo puedo\n\nMira a Marcus decidir qué hacer en el cuento Escuchado.\n\nTres cuentos nuevos. Una biblioteca de valentía.\n▶️ mccraylearninglab.com (bio: enlace)\n＋ Síguenos: un cuento nuevo cada semana";
+
+  var SEED_POSTS_V2 = [
+    {brand:"mccray", category:"Reel Library", platform:"Facebook + Instagram Reel", title:"Reel — The Finish Muscle (Malik)", dateLabel:"Reel library — anytime", status:"drafted",
+      caption:MCCRAY_REEL_KIDS, hashtags:"#McCrayLearningLab #ReadingStamina #ScreenTimeDoneRight",
+      assetLink:"facebook-kit/reels/reel-the-finish-muscle.mp4", notes:"Audience: kids 7-11. Music: warm, hopeful acoustic. 20.6s."},
+    {brand:"mccray", category:"Reel Library", platform:"Facebook + Instagram Reel", title:"Reel — Train Like a Champion (Riley)", dateLabel:"Reel library — anytime", status:"drafted",
+      caption:MCCRAY_REEL_KIDS, hashtags:"#McCrayLearningLab #YouthBasketball #MindsetMatters",
+      assetLink:"facebook-kit/reels/reel-train-like-a-champion.mp4", notes:"Audience: kids 7-11. Music: cheerful, light percussion. 20.6s."},
+    {brand:"mccray", category:"Reel Library · Grown-ups", platform:"Facebook + Instagram Reel", title:"Reel — When They Come Home Deflated", dateLabel:"Reel library — anytime", status:"drafted",
+      caption:MCCRAY_REEL_GROWNUPS, hashtags:"#McCrayLearningLab #ConsciousParenting #GentleParenting",
+      assetLink:"facebook-kit/reels/reel-grownups-when-they-come-home-deflated.mp4", notes:"Audience: grown-ups (badged \"🍎 for grown-ups\"). Music: warm empathetic piano. 20.6s."},
+    {brand:"mccray", category:"Reel Library · Grown-ups", platform:"Facebook + Instagram Reel", title:"Reel — The Magic Words (Grown-Up's Turn)", dateLabel:"Reel library — anytime", status:"drafted",
+      caption:MCCRAY_REEL_GROWNUPS, hashtags:"#McCrayLearningLab #ConsciousParenting #GentleParenting",
+      assetLink:"facebook-kit/reels/reel-grownups-the-magic-words.mp4", notes:"Audience: grown-ups (badged \"🍎 for grown-ups\"). Music: warm, hopeful acoustic. 20.6s."},
+    {brand:"mccray", category:"Launch Reel", platform:"Facebook + Instagram Reel", title:"Launch Reel — Three New Stories (EN)", dateLabel:"Launch day (before Wk1)", status:"drafted",
+      caption:MCCRAY_LAUNCH_REEL_EN, hashtags:"#McCrayLearningLab #SEL #GrowthMindset #NewRelease",
+      assetLink:"facebook-kit/reels/reel-three-new-stories.mp4",
+      notes:"Introduces The Corner We Fixed / The Why Door / Heard — not covered by any other seeded caption. Choice beat: \"What should Marcus do?\" A) Blurt it out, angry, in the middle of the next game. B) Ask Coach for a minute after practice, and use the three steps (correct — crossfades gold with a ✓ stamp). Full timed script: facebook-kit/reels/src/three-new-stories-scene.html."},
+    {brand:"mccray", category:"Launch Reel", platform:"Facebook + Instagram Reel", title:"Launch Reel — Tres Cuentos Nuevos (ES)", dateLabel:"Launch day (before Wk1)", status:"drafted",
+      caption:MCCRAY_LAUNCH_REEL_ES, hashtags:"#McCrayLearningLab #SEL #GrowthMindset #NewRelease",
+      assetLink:"facebook-kit/reels/reel-three-new-stories-es.mp4",
+      notes:"Spanish edition of the launch Reel above. Toast copy: \"↻ Casi. ¡Inténtalo otra vez!\" Full timed script: facebook-kit/reels/src/three-new-stories-scene-es.html."}
+  ];
+
+  var SEED_LIBRARY = [
+    {brand:"mccray", kind:"rule", title:"Truth-in-copy rule (Aug 17, 2026)", content:"The Lab is freemium. Six SEL comics are free forever (Solving Problems With Friends · Growing Your Brain Power Every Day! · Magic Words: Grow Your Brain Bigger · Train Like a Champion · Level Up Your Mind Game · Stay Strong: A Resilience Toolkit) plus Little Lab letters A-F, plus one rotating free story each month. Everything else needs the membership ($4.99/mo · $36/yr · $99/yr classroom). Never say \"25 free\" or \"free to play\" as a blanket claim; per-story \"free\" claims only on the six. No em dashes in any posted copy."},
+    {brand:"mccray", kind:"rule", title:"Platform quick-rules", content:"Facebook: links in the post text are clickable — put mccraylearninglab.com right in the caption. Keep hashtags light (3-5).\nInstagram feed: links in captions are NOT clickable — write \"link in bio\" and put the URL in your bio (or a Linktree). Hashtags can go up to ~30.\nStories (FB & IG): add a link sticker so it's tappable.\nEverywhere: mccraylearninglab.com (or a specific story path)."},
+    {brand:"mccray", kind:"hashtags", title:"Facebook set (pick 3-5)", content:"#McCrayLearningLab #SEL #GrowthMindset #ReadAloud #KidsBooks"},
+    {brand:"mccray", kind:"hashtags", title:"Instagram core set (~24, paste as-is)", content:"#McCrayLearningLab #SEL #SocialEmotionalLearning #GrowthMindset #BigFeelings #EmotionalIntelligence #KidLit #ReadAloud #RaisingReaders #EarlyLiteracy #KidsMentalHealth #ConsciousParenting #GentleParenting #TeachersOfInstagram #ElementaryTeacher #Homeschool #Homeschooling #ScreenTimeDoneRight #StoryTime #ParentingTips #ChildDevelopment #TeacherLife #EdTech #StoryComics"},
+    {brand:"mccray", kind:"hashtags", title:"Topic add-on — grief (Keep the Love)", content:"#ChildhoodGrief #GriefSupport #PetLoss"},
+    {brand:"mccray", kind:"hashtags", title:"Topic add-on — sports (Level Up / Train Like a Champion)", content:"#YouthBasketball #KidsSports #MindsetMatters"},
+    {brand:"mccray", kind:"hashtags", title:"Topic add-on — reading (Word Detective / Finish Muscle)", content:"#ReadingComprehension #EarlyReaders #Phonics #ReadingStamina"},
+    {brand:"mccray", kind:"hashtags", title:"Topic add-on — announcement / evergreen", content:"#EdTechForKids #LearningThroughStories"},
+    {brand:"mccray", kind:"caption", title:"Gameplay Reel (grown-ups)", content:MCCRAY_REEL_GROWNUPS},
+
+    {brand:"chillcrew", kind:"bio", title:"YouTube channel description", content:"Chill Crew is a shonen-style animated series about four kids at King Middle whose emotions show up as fire, lightning, mist and stone — and who are teaching each other to use them instead of getting used by them. New episodes every Thursday. Shorts every Tuesday. Made by McCray Learning Lab."},
+    {brand:"chillcrew", kind:"bio", title:"TikTok / Instagram bio (80 chars)", content:"the flare isn't the danger. not knowing what to do with it is. 🔥⚡🌫️🪨 eps thu · shorts tue"},
+    {brand:"chillcrew", kind:"hashtags", title:"Core hashtag stack", content:"#ChillCrew #Anime #Animation — plus rotating from: #ShonenAnime #IndieAnimation #BlackAnimation #AnimeShorts #AnimeEdit #MiddleSchool #SEL #SocialEmotionalLearning #SchoolCounselor #TeachersOfTikTok #CASEL #McCrayLearningLab"},
+    {brand:"chillcrew", kind:"rule", title:"Positioning (Launch Campaign)", content:"Two audiences: kids (the show itself, no SEL language in kid-facing captions) and parents/educators (the CASEL framing, the one-pager, the educator email). Keep the two voices separate — a kid caption never says \"competency\" or \"CASEL\"."},
+    {brand:"chillcrew", kind:"idea", title:"Recurring beat: Sunday still-teaser", content:"One still from next episode posted the Sunday before, with no caption at all — repeat every week of the season."}
+  ];
+
+  // Script cards: 32 branded quote-card graphics (marketing/script-cards/
+  // mccray/output/, mccray-NN.png), each hook->say pulled verbatim from
+  // the app's own "Say it:"/"Word Power" lines. Real, shareable social
+  // assets, confirmed not wired into any calendar before this pass.
+  var SCRIPT_CARDS = [
+    {n:1, title:"Train Like a Champion", hook:"When they say 'I can't'", say:"Add one little word. I can't win… YET."},
+    {n:2, title:"Solving Problems With Friends", hook:"When two kids want the same thing", say:"Let's take turns!"},
+    {n:3, title:"Level Up Your Mind Game", hook:"When The Doubt whispers 'told you'", say:"A mistake is a clue, not a verdict."},
+    {n:4, title:"Growing Your Brain Power Every Day!", hook:"When 'I can't do it' shows up", say:"Little by little — that's how big things happen!"},
+    {n:5, title:"Magic Words: Grow Your Brain Bigger", hook:"When they think they're 'not smart'", say:"Trying hard is the real magic!"},
+    {n:6, title:"Stay Strong: A Resilience Toolkit", hook:"When the world questions their worth", say:"You are beautiful and brilliant, just as you are. Confidence is armor for a world that might question your worth."},
+    {n:7, title:"The Worry That Shrank", hook:"Before a scary first day", say:"Feelings first. Fixing second."},
+    {n:8, title:"The Finish Muscle", hook:"When 'just one peek' turns into an hour", say:"I can notice the Pull without following it."},
+    {n:9, title:"The Whole Story", hook:"When a friend walks right past you", say:"'Mean' is usually 'hurting' in a costume."},
+    {n:10, title:"The Empty Seat", hook:"When nobody makes room for the new kid", say:"My words can open a seat."},
+    {n:11, title:"Room for Me, Room for You", hook:"When you're the new kid at lunch", say:"I found my place — and made room."},
+    {n:12, title:"Room for Everyone", hook:"When a classmate does things differently", say:"A different mind can be a gift."},
+    {n:13, title:"Read the Room", hook:"When a text lands wrong", say:"When in doubt, ask — don't assume."},
+    {n:14, title:"Behind the Filter", hook:"When the feed makes them feel small", say:"I don't have to earn 'enough.' I already am."},
+    {n:15, title:"Keep the Love", hook:"When a pet or person is gone", say:"Love doesn't leave. It changes shape."},
+    {n:16, title:"The Big Change", hook:"When everything about home is changing", say:"New can become home."},
+    {n:17, title:"Enough", hook:"When everyone else has the new thing", say:"When I count what I've got, the wanting gets quiet."},
+    {n:18, title:"The Story In You", hook:"When they think they have no story to tell", say:"The story was in me the whole time."},
+    {n:19, title:"The Feelings Detective", hook:"When a big feeling shows up out of nowhere", say:"Name it to shrink it."},
+    {n:20, title:"Real or Fake? Think Before You Share", hook:"When something online begs to be shared fast", say:"Sixty seconds of checking beats a fast thumb."},
+    {n:21, title:"Word Detective", hook:"When 'reading is too hard' shows up", say:"Words are clues. I can crack them."},
+    {n:22, title:"The Magic Words: A Grown-Up's Turn", hook:"When 'good job' isn't enough", say:"You worked so hard on that.", grownup:true},
+    {n:23, title:"When They Come Home Deflated", hook:"When they come home deflated", say:"There is nothing wrong with you. You come from greatness.", grownup:true},
+    {n:24, title:"The Peacemaker's Turn", hook:"When you're tempted to referee", say:"How could we make this fair for both of you?", grownup:true},
+    {n:25, title:"The Voice in Their Head", hook:"When their self-talk turns harsh", say:"The voice in their head starts as your voice out loud.", grownup:true},
+    {n:26, title:"Coaching the Loss", hook:"When they lose the big game", say:"I saw how hard you fought out there.", grownup:true},
+    {n:27, title:"Growing Brain Power: A Grown-Up's Turn", hook:"When a task feels too big to start", say:"Let's just do this one small part.", grownup:true},
+    {n:28, title:"Try Again, Aaliyah", hook:"When the puzzle piece won't fit", say:"I can try again!", littlelab:true},
+    {n:29, title:"Room for Bisa", hook:"When it's their very first day", say:"I belong!", littlelab:true},
+    {n:30, title:"The Clapping Song", hook:"When their whole body has the wiggles", say:"I've got rhythm!", littlelab:true},
+    {n:31, title:"Quiet Words", hook:"When a party gets too loud", say:"I can breathe!", littlelab:true},
+    {n:32, title:"Emeka Keeps Going", hook:"When the tower keeps wobbling", say:"I have patience!", littlelab:true}
+  ];
+
+  var SEED_LIBRARY_V2 = SCRIPT_CARDS.map(function(c){
+    var suffix = c.grownup ? " (Grown-Up Practice)" : c.littlelab ? " (Little Lab)" : "";
+    return {brand:"mccray", kind:"card", title:"Card "+c.n+" — "+c.title+suffix,
+      content:"Moment: "+c.hook+"\nSay: \""+c.say+"\"\nAsset: marketing/script-cards/mccray/output/mccray-"+(c.n<10?"0":"")+c.n+".png"};
+  });
+  SEED_LIBRARY_V2.push(
+    {brand:"mccray", kind:"rule", title:"Script cards — Spanish set", content:"All 32 cards have a 1:1 Spanish twin (marketing/script-cards/mccray/output/mccray-es-NN.png) — independently drafted + verified translations, since McCray has no bilingual source text for these lines. Example, Card 1: hook \"Cuando digan 'no puedo'\", say \"Agrega una palabra chiquita. No puedo ganar… ¡TODAVÍA!\""},
+    {brand:"mccray", kind:"rule", title:"Script-card caption starter", content:"The words for a hard moment, ready before you need them. 🤎\nThe moment: [hook].\nWhat to practice saying: \"[say]\"\nRehearse the whole moment, free, at mccraylearninglab.com.\nA practice tool, not therapy."},
+    {brand:"mccray", kind:"asset", title:"Facebook Page setup assets", content:"facebook-kit/fb-profile.png (500x500 profile picture)\nfacebook-kit/fb-cover.png or fb-cover-linkstyle.png (1640x624 cover photo)\nfacebook-kit/fb-link-share.png (1200x630 Open Graph / link preview)\nfacebook-kit/fb-story.png (1080x1920 Story template)"}
+  );
+
+  // ---------------------------------------------------------------
+  // v3: real, ready-to-use pointers to every item above — the actual
+  // local file path (McCray's assets live in the practitioner's own
+  // Downloads folder, confirmed real roots below) or the actual
+  // CloudFront master URL (Chill Crew, hosted, so a real clickable
+  // link works). v1/v2's own arrays are left untouched above — a
+  // brand-new desk still runs v1 -> v2 -> v3 in order and lands here;
+  // v3 also RE-patches the handful of v2 posts/cards that shipped with
+  // repo-relative paths, correcting them to these real paths.
+  // ---------------------------------------------------------------
+  var MCCRAY_ROOT = "C:\\Users\\ellas\\Downloads\\mccray-learning-lab-site\\";
+  var DLFK_ROOT = "C:\\Users\\ellas\\Downloads\\Daily Lessons for Kids\\";
+  var CF_BASE = "https://d2ol7oe51mr4n9.cloudfront.net/user_3Edyvjaoes1Jfe4i0WfmAJ5f94C/";
+
+  var ASSET_PATCHES_V3 = [
+    // McCray posts seeded in v1 (re-patched: v2 had repo-relative paths)
+    {title:"Big Feelings (Announcement)", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-post-big-feelings.png"},
+    {title:"Gameplay Reel — Word Detective", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-word-detective.mp4"},
+    {title:"Gameplay Reel — Keep the Love", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-keep-the-love.mp4"},
+    {title:"Spotlight — Level Up Your Mind Game (Kai)", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights\\spotlight-level-up.png"},
+    {title:"Spotlight — Keep the Love (Micah)", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights\\spotlight-keep-the-love.png"},
+    {title:"Spotlight — The Finish Muscle (Malik)", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights\\spotlight-finish-muscle.png"},
+    {title:"Spotlight — Train Like a Champion (Riley)", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights\\spotlight-champion.png"},
+    {title:"Spotlight — Word Detective (Deja)", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights\\spotlight-word-detective.png"},
+    {title:"What's Inside Every Comic?", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-post-whats-inside.png"},
+    {title:"What's Inside (Re-share)", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-post-whats-inside.png"},
+    {title:"Story Frame (link sticker)", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-story.png"},
+    // McCray posts seeded in v2 (re-patched to real paths)
+    {title:"Reel — The Finish Muscle (Malik)", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-the-finish-muscle.mp4"},
+    {title:"Reel — Train Like a Champion (Riley)", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-train-like-a-champion.mp4"},
+    {title:"Reel — When They Come Home Deflated", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-grownups-when-they-come-home-deflated.mp4"},
+    {title:"Reel — The Magic Words (Grown-Up's Turn)", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-grownups-the-magic-words.mp4"},
+    {title:"Launch Reel — Three New Stories (EN)", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-three-new-stories.mp4"},
+    {title:"Launch Reel — Tres Cuentos Nuevos (ES)", assetLink:MCCRAY_ROOT+"facebook-kit\\reels\\reel-three-new-stories-es.mp4"},
+    // Chill Crew: real CloudFront master URLs (CHILL-CREW-CURRENT.md §2) — real clickable links, not local paths
+    {title:"Ep. 1 — \"Blowout\"", assetLink:CF_BASE+"dccd24da-1ba3-494a-ab07-aeecfe2cfc3d.mp4"},
+    {title:"Ep. 2 — \"The Vent\"", assetLink:CF_BASE+"262adac5-86d3-4564-80fc-c5db613f2bcb.mp4"},
+    {title:"Ep. 3 — \"Fog\"", assetLink:CF_BASE+"e0720806-830c-4622-b279-dd1c92f9c16e.mp4"},
+    {title:"Ep. 4 — \"Combo\"", assetLink:CF_BASE+"76f33463-246e-4cac-94e8-88ddc2ab40ab.mp4"},
+    {title:"Ep. 5 — \"The Choice\"", assetLink:CF_BASE+"6aa5b0ac-eac2-4721-a2a7-02560cc1e522.mp4"},
+    {title:"Ep. 6 — \"Stone\"", assetLink:CF_BASE+"6917ee8c-c76b-4f1b-894a-5aaedb595624.mp4"},
+    {title:"Ep. 7 — \"Dampener\"", assetLink:CF_BASE+"40592704-b4fc-44ac-b7ad-7a922e46b910.mp4"},
+    {title:"Ep. 8 — \"Shape It\" (Season Finale)", assetLink:CF_BASE+"2fba4ec6-f6ea-47ff-b695-012da53e8574.mp4"},
+    {title:"Short 1 — Four Seconds Early", assetLink:CF_BASE+"ec07253f-babe-4e36-9ef0-68a9b81d730b.mp4"},
+    {title:"Short 2 — Happy Is A Flare Too", assetLink:CF_BASE+"afb1710e-3c0a-4b3a-b7fc-a8793238e9f6.mp4"},
+    {title:"Short 3 — Where Is It Right Now", assetLink:CF_BASE+"8c34dc75-07b2-48ce-a523-ce4142cb8b29.mp4"},
+    {title:"Short 4 — Only Works If Both Calm", assetLink:CF_BASE+"ed2dea36-aae9-47d2-950e-dc90f7bb6d7a.mp4"},
+    {title:"Short 5 — She Could Have", assetLink:CF_BASE+"0bd585b6-cd58-42f2-9ae7-e62de99183a7.mp4"},
+    {title:"Short 6 — Quiet Isn't Okay", assetLink:CF_BASE+"b77a12e1-26b3-4710-b01a-59487e7c1379.mp4"},
+    {title:"Short 7 — She Took It Off", assetLink:CF_BASE+"52fdfafc-d1d6-4fd9-83d1-03556a7286f1.mp4"},
+    {title:"Short 8 — Whole School Waited", assetLink:CF_BASE+"e6afc17b-ebee-4831-8baf-013dfb445777.mp4"},
+    {title:"Season Two Teaser (16:9)", assetLink:CF_BASE+"a8852814-2b79-455a-a400-71eb1303cb07.mp4"},
+    {title:"Season Two Teaser (9:16)", assetLink:CF_BASE+"a575c545-fa68-46bd-80c9-3426e13499a3.mp4"}
+  ];
+
+  // Script cards: move the asset out of the plain-text `content` (v2)
+  // into a real assetLink field with its own copy/folder buttons.
+  var LIBRARY_PATCHES_V3 = SCRIPT_CARDS.map(function(c){
+    var suffix = c.grownup ? " (Grown-Up Practice)" : c.littlelab ? " (Little Lab)" : "";
+    var n = (c.n<10?"0":"")+c.n;
+    return {
+      title:"Card "+c.n+" — "+c.title+suffix,
+      content:"Moment: "+c.hook+"\nSay: \""+c.say+"\"",
+      assetLink: DLFK_ROOT+"marketing\\script-cards\\mccray\\output\\mccray-"+n+".png"
+    };
+  });
+
+  // New library entries: individual brand-setup assets + top-level
+  // folder shortcuts, so "the whole Reels folder" or "the cards output
+  // folder" is one copy away too, not just single files.
+  var SEED_LIBRARY_V3 = [
+    {brand:"mccray", kind:"asset", title:"Facebook profile picture", content:"500x500 profile picture.", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-profile.png"},
+    {brand:"mccray", kind:"asset", title:"Facebook cover photo", content:"1640x624 cover photo (current build).", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-cover-linkstyle.png"},
+    {brand:"mccray", kind:"asset", title:"Link-share preview image", content:"1200x630 Open Graph / link preview.", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-link-share.png"},
+    {brand:"mccray", kind:"asset", title:"Story template", content:"1080x1920 Story template.", assetLink:MCCRAY_ROOT+"facebook-kit\\fb-story.png"},
+    {brand:"mccray", kind:"folder", title:"Reels folder", content:"All 8 curated Reels, plus the launch Reel's editable timed-script source (src/).", assetLink:MCCRAY_ROOT+"facebook-kit\\reels"},
+    {brand:"mccray", kind:"folder", title:"Spotlights folder", content:"All 5 spotlight post images.", assetLink:MCCRAY_ROOT+"facebook-kit\\spotlights"},
+    {brand:"mccray", kind:"folder", title:"Script cards folder (EN + ES)", content:"All 64 rendered script-card PNGs (32 EN + 32 ES) plus thumbs/.", assetLink:DLFK_ROOT+"marketing\\script-cards\\mccray\\output"}
+  ];
+
+  // ---------------------------------------------------------------
+  // State + DB wiring
+  // ---------------------------------------------------------------
+  var db = null;
+  var posts = [];
+  var library = [];
+  var brandFilter = "all";
+  var statusFilter = "all";
+  var activeTab = "calendar";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._h);
+    toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1400);
+  }
+
+  function copyText(btn, text){
+    function ok(){
+      btn.classList.add("copied");
+      var old = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(function(){ btn.classList.remove("copied"); btn.textContent = old; }, 1200);
+    }
+    try{
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(ok).catch(function(){ toast("Copy failed — select and copy manually"); });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok();
+      }
+    } catch(e){ toast("Copy failed — select and copy manually"); }
+  }
+
+  function fullText(p){
+    var parts = [p.caption || ""];
+    if (p.hashtags) parts.push(p.hashtags);
+    if (p.pinned) parts.push("Pinned: " + p.pinned);
+    return parts.join("\n\n");
+  }
+
+  // ---------------------------------------------------------------
+  // Rendering
+  // ---------------------------------------------------------------
+  function matchesFilter(p){
+    if (brandFilter !== "all" && p.brand !== brandFilter) return false;
+    if (statusFilter !== "all" && p.status !== statusFilter) return false;
+    return true;
+  }
+
+  function renderChips(){
+    var byBrand = {mccray:0, chillcrew:0};
+    var byStatus = {idea:0, drafted:0, scheduled:0, posted:0};
+    posts.forEach(function(p){
+      if (byBrand[p.brand] != null) byBrand[p.brand]++;
+      if (byStatus[p.status] != null) byStatus[p.status]++;
+    });
+    var el = document.getElementById("countChips");
+    el.innerHTML =
+      '<span class="count-chip"><b>'+posts.length+'</b> total</span>' +
+      '<span class="count-chip"><b>'+byBrand.mccray+'</b> McCray</span>' +
+      '<span class="count-chip"><b>'+byBrand.chillcrew+'</b> Chill Crew</span>' +
+      '<span class="count-chip"><b>'+byStatus.idea+'</b> idea</span>' +
+      '<span class="count-chip"><b>'+byStatus.drafted+'</b> drafted</span>';
+  }
+
+  function renderPills(){
+    var bp = document.getElementById("brandPills");
+    bp.innerHTML = '<span class="label">Brand</span>' +
+      ['all','mccray','chillcrew'].map(function(b){
+        var label = b === "all" ? "All" : BRAND_LABEL[b];
+        return '<button class="pill '+(brandFilter===b?'active '+b:'')+'" data-brand="'+b+'">'+esc(label)+'</button>';
+      }).join("");
+    var sp = document.getElementById("statusPills");
+    sp.innerHTML = '<span class="label">Status</span>' +
+      ['all'].concat(STATUSES).map(function(s){
+        var label = s === "all" ? "All" : STATUS_LABEL[s];
+        return '<button class="pill '+(statusFilter===s?'active':'')+'" data-status="'+s+'">'+esc(label)+'</button>';
+      }).join("");
+    bp.querySelectorAll("[data-brand]").forEach(function(btn){
+      btn.addEventListener("click", function(){ brandFilter = btn.getAttribute("data-brand"); renderAll(); });
+    });
+    sp.querySelectorAll("[data-status]").forEach(function(btn){
+      btn.addEventListener("click", function(){ statusFilter = btn.getAttribute("data-status"); renderAll(); });
+    });
+  }
+
+  function accentFor(brand){ return brand === "mccray" ? "var(--mccray)" : "var(--chillcrew)"; }
+
+  // Real, ready-to-use pointer to the actual file/folder/CDN URL for an
+  // item — a clickable "Open" link when it's a real http(s) URL (Chill
+  // Crew's CloudFront masters), otherwise the exact local path plus a
+  // one-click copy (paste into Explorer's address bar to jump straight
+  // there) since a hosted page can't open a local file directly.
+  function assetActionsHTML(link){
+    if (!link) return "";
+    var isUrl = /^https?:\/\//i.test(link);
+    var lastSeg = link.split(/[\\\/]/).pop();
+    var looksLikeFile = !isUrl && /\.[a-zA-Z0-9]{2,5}$/.test(lastSeg);
+    var folder = looksLikeFile ? link.slice(0, link.length - lastSeg.length).replace(/[\\\/]$/, "") : "";
+    var html = '<div class="asset-block">';
+    html += isUrl
+      ? '<a href="'+esc(link)+'" target="_blank" rel="noopener">Open asset ↗</a>'
+      : '<span class="mono">'+esc(link)+'</span>';
+    html += '<div class="card-actions">';
+    html += '<button class="copy-btn" data-value="'+esc(link)+'">'+(isUrl ? "Copy link" : "Copy path")+'</button>';
+    if (folder) html += '<button class="copy-btn" data-value="'+esc(folder)+'">Copy folder</button>';
+    html += '</div></div>';
+    return html;
+  }
+
+  function wireValueCopyButtons(container){
+    container.querySelectorAll("[data-value]").forEach(function(btn){
+      btn.addEventListener("click", function(){ copyText(btn, btn.getAttribute("data-value")); });
+    });
+  }
+
+  function postCardHTML(p){
+    var actions = '<button class="copy-btn" data-copy="caption">Copy caption</button>';
+    if (p.hashtags) actions += '<button class="copy-btn" data-copy="hashtags">Copy hashtags</button>';
+    if (p.pinned) actions += '<button class="copy-btn" data-copy="pinned">Copy pinned</button>';
+    var statusOpts = STATUSES.map(function(s){
+      return '<option value="'+s+'"'+(s===p.status?" selected":"")+'>'+STATUS_LABEL[s]+'</option>';
+    }).join("");
+    return (
+      '<div class="post-card" data-id="'+p.id+'" style="--accent:'+accentFor(p.brand)+'">' +
+        '<div class="post-top">' +
+          '<div><div class="post-meta">'+esc(BRAND_LABEL[p.brand])+' · '+esc(p.category||"")+'</div>' +
+          '<div class="post-title">'+esc(p.title)+'</div></div>' +
+          '<div class="post-date">'+esc(p.dateLabel||"")+'</div>' +
+        '</div>' +
+        '<div class="post-top">' +
+          '<div class="post-meta">'+esc(p.platform||"")+'</div>' +
+          '<select class="status-select" data-id="'+p.id+'">'+statusOpts+'</select>' +
+        '</div>' +
+        (p.assetLink ? assetActionsHTML(p.assetLink) : '') +
+        '<details class="body-copy"><summary>Caption &amp; details</summary>' +
+          (p.caption ? '<div class="caption-block">'+esc(p.caption)+'</div>' : '') +
+          (p.hashtags ? '<div class="hashtag-block">'+esc(p.hashtags)+'</div>' : '') +
+          (p.pinned ? '<div class="pinned-block">Pinned: '+esc(p.pinned)+'</div>' : '') +
+          (p.notes ? '<div class="pinned-block">Note: '+esc(p.notes)+'</div>' : '') +
+          '<div class="card-actions">'+actions+'</div>' +
+        '</details>' +
+      '</div>'
+    );
+  }
+
+  function wireCard(container){
+    container.querySelectorAll(".copy-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var card = btn.closest(".post-card");
+        var id = card.getAttribute("data-id");
+        var p = posts.filter(function(x){ return x.id === id; })[0];
+        if (!p) return;
+        var kind = btn.getAttribute("data-copy");
+        var text = kind === "caption" ? (p.caption||"") : kind === "hashtags" ? (p.hashtags||"") : (p.pinned||"");
+        copyText(btn, text);
+      });
+    });
+    container.querySelectorAll(".status-select").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        updateStatus(sel.getAttribute("data-id"), sel.value);
+      });
+    });
+    wireValueCopyButtons(container);
+  }
+
+  function updateStatus(id, status){
+    if (!db) return;
+    db.doc("posts/"+id).update({status:status, updatedAt: Date.now()}).catch(function(e){
+      toast("Couldn't save — try again");
+    });
+  }
+
+  function renderCalendar(){
+    var panel = document.querySelector('section[data-panel="calendar"]');
+    var filtered = posts.filter(matchesFilter);
+    var dated = filtered.filter(function(p){ return p.sortDate; }).sort(function(a,b){ return a.sortDate < b.sortDate ? -1 : 1; });
+    var evergreen = filtered.filter(function(p){ return !p.sortDate; });
+    var html = "";
+    if (dated.length){
+      html += '<div class="cal-group"><h2>Scheduled</h2><div class="cal-list">' + dated.map(postCardHTML).join("") + '</div></div>';
+    }
+    if (evergreen.length){
+      html += '<div class="cal-group"><h2>Evergreen weekly rhythm</h2><div class="cal-list">' + evergreen.map(postCardHTML).join("") + '</div></div>';
+    }
+    if (!dated.length && !evergreen.length){
+      html = '<div class="upnext-empty">No posts match this filter.</div>';
+    }
+    panel.innerHTML = html;
+    wireCard(panel);
+  }
+
+  function renderTracker(){
+    var panel = document.querySelector('section[data-panel="tracker"]');
+    var filtered = posts.filter(matchesFilter);
+    var cols = STATUSES.map(function(s){
+      var items = filtered.filter(function(p){ return p.status === s; });
+      var accentVar = "var(--"+s+")";
+      var body = items.length
+        ? items.map(postCardHTML).join("")
+        : '<div class="kcol-empty">Nothing here</div>';
+      return (
+        '<div class="kcol">' +
+          '<div class="kcol-head" style="--accent2:'+accentVar+'"><h3>'+STATUS_LABEL[s]+'</h3><span class="kcol-count">'+items.length+'</span></div>' +
+          '<div class="kcol-body">'+body+'</div>' +
+        '</div>'
+      );
+    }).join("");
+    panel.innerHTML = '<div class="kanban">'+cols+'</div>';
+    wireCard(panel);
+  }
+
+  function libCardHTML(item){
+    return (
+      '<div class="lib-card">' +
+        '<div class="lib-title">'+esc(item.title)+'</div>' +
+        (item.content ? '<div class="lib-content">'+esc(item.content)+'</div>' : '') +
+        (item.assetLink ? assetActionsHTML(item.assetLink) : '') +
+        (item.content ? '<div class="card-actions"><button class="copy-btn" data-lib="'+item.id+'">Copy</button></div>' : '') +
+      '</div>'
+    );
+  }
+
+  var KIND_LABEL = {caption:"Captions", hashtags:"Hashtag banks", rule:"Rules & guardrails", bio:"Bios", idea:"Ideas", card:"Script cards", asset:"Brand assets", folder:"Quick folders"};
+
+  function renderLibrary(){
+    var panel = document.querySelector('section[data-panel="library"]');
+    var q = (document.getElementById("libSearch") ? document.getElementById("libSearch").value : "").toLowerCase();
+    var brands = brandFilter === "all" ? ["mccray","chillcrew"] : [brandFilter];
+    var html = '<div class="lib-search"><input id="libSearch" placeholder="Search the library…" value="'+esc(q)+'"></div>';
+    brands.forEach(function(brand){
+      var items = library.filter(function(x){ return x.brand === brand; })
+        .filter(function(x){ return !q || (x.title+" "+x.content).toLowerCase().indexOf(q) !== -1; });
+      if (!items.length) return;
+      var kinds = {};
+      items.forEach(function(x){ (kinds[x.kind] = kinds[x.kind] || []).push(x); });
+      var swatch = brand === "mccray" ? "var(--mccray)" : "var(--chillcrew)";
+      html += '<div class="lib-brand"><h2><span class="swatch" style="background:'+swatch+'"></span>'+esc(BRAND_LABEL[brand])+'</h2>';
+      Object.keys(kinds).forEach(function(kind){
+        html += '<div class="lib-kind"><h3>'+(KIND_LABEL[kind]||kind)+'</h3><div class="lib-grid">' +
+          kinds[kind].map(libCardHTML).join("") + '</div></div>';
+      });
+      html += '</div>';
+    });
+    if (library.filter(function(x){ return brands.indexOf(x.brand) !== -1; }).length === 0){
+      html += '<div class="upnext-empty">No library items yet.</div>';
+    }
+    panel.innerHTML = html;
+    var input = document.getElementById("libSearch");
+    if (input){
+      input.addEventListener("input", function(){ renderLibrary(); });
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+    panel.querySelectorAll("[data-lib]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-lib");
+        var item = library.filter(function(x){ return x.id === id; })[0];
+        if (item) copyText(btn, item.content);
+      });
+    });
+    wireValueCopyButtons(panel);
+  }
+
+  function renderUpNext(){
+    var row = document.getElementById("upNextRow");
+    var upcoming = posts.filter(function(p){ return p.sortDate && p.status !== "posted"; })
+      .sort(function(a,b){ return a.sortDate < b.sortDate ? -1 : 1; })
+      .slice(0,6);
+    if (!upcoming.length){
+      row.innerHTML = '<div class="upnext-empty">Nothing scheduled yet.</div>';
+      return;
+    }
+    row.innerHTML = upcoming.map(function(p){
+      return '<div class="upnext-card" style="--accent:'+accentFor(p.brand)+'">' +
+        '<div class="up-date">'+esc(p.dateLabel||p.sortDate)+'</div>' +
+        '<div class="up-title">'+esc(p.title)+'</div>' +
+        '<span class="status-pill status-'+p.status+'">'+STATUS_LABEL[p.status]+'</span>' +
+      '</div>';
+    }).join("");
+  }
+
+  function renderTabs(){
+    document.querySelectorAll(".tab-btn").forEach(function(btn){
+      var isActive = btn.getAttribute("data-panel") === activeTab;
+      btn.classList.toggle("active", isActive);
+    });
+    document.querySelectorAll("section[data-panel]").forEach(function(sec){
+      sec.hidden = sec.getAttribute("data-panel") !== activeTab;
+    });
+  }
+
+  function renderAll(){
+    renderChips();
+    renderPills();
+    renderUpNext();
+    renderCalendar();
+    renderTracker();
+    renderLibrary();
+    renderTabs();
+  }
+
+  // ---------------------------------------------------------------
+  // Tabs, quick-add wiring
+  // ---------------------------------------------------------------
+  document.querySelectorAll(".tab-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      activeTab = btn.getAttribute("data-panel");
+      renderTabs();
+    });
+  });
+
+  var quickAdd = document.getElementById("quickAdd");
+  document.getElementById("toggleAdd").addEventListener("click", function(){
+    quickAdd.hidden = !quickAdd.hidden;
+  });
+  document.getElementById("cancelAdd").addEventListener("click", function(){
+    quickAdd.hidden = true;
+  });
+  document.getElementById("addForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    if (!db){ toast("Not connected — can't add a post right now"); return; }
+    var sortDateVal = document.getElementById("qa-sortdate").value || null;
+    var data = {
+      brand: document.getElementById("qa-brand").value,
+      category: document.getElementById("qa-category").value,
+      platform: document.getElementById("qa-platform").value,
+      title: document.getElementById("qa-title").value,
+      dateLabel: document.getElementById("qa-datelabel").value || sortDateVal || "",
+      sortDate: sortDateVal,
+      status: document.getElementById("qa-status").value,
+      caption: document.getElementById("qa-caption").value,
+      hashtags: document.getElementById("qa-hashtags").value,
+      pinned: document.getElementById("qa-pinned").value,
+      createdAt: Date.now(), updatedAt: Date.now()
+    };
+    db.collection("posts").add(data).then(function(){
+      ev.target.reset();
+      quickAdd.hidden = true;
+      toast("Post added");
+    }).catch(function(){ toast("Couldn't add — try again"); });
+  });
+
+  // ---------------------------------------------------------------
+  // Boot: connect db, seed once, subscribe
+  // ---------------------------------------------------------------
+  function subscribe(){
+    db.collection("posts").onSnapshot(function(snap){
+      posts = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      document.getElementById("loadingMsg").hidden = true;
+      renderAll();
+    }, function(){ toast("Live updates interrupted"); });
+
+    db.collection("library").onSnapshot(function(snap){
+      library = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      renderAll();
+    }, function(){});
+  }
+
+  function seedIfNeeded(){
+    return db.doc("meta/seeded").get().then(function(snap){
+      if (snap.exists) return;
+      var chain = Promise.resolve();
+      SEED_POSTS.forEach(function(p){
+        chain = chain.then(function(){
+          var data = Object.assign({createdAt: Date.now(), updatedAt: Date.now()}, p);
+          if (data.sortDate === undefined) data.sortDate = null;
+          return db.collection("posts").add(data);
+        });
+      });
+      SEED_LIBRARY.forEach(function(item){
+        chain = chain.then(function(){ return db.collection("library").add(item); });
+      });
+      return chain.then(function(){
+        return db.doc("meta/seeded").set({seeded:true, seededAt: Date.now()});
+      });
+    });
+  }
+
+  // v2 seed: patches real asset paths onto posts seeded by v1 (matched
+  // by title, since those documents already exist and won't be touched
+  // by seedIfNeeded again), then adds the new Reel/launch posts and the
+  // script-card library. Guarded separately so a desk that already ran
+  // v1 picks up v2 exactly once, without re-adding the v1 set.
+  function seedV2IfNeeded(){
+    return db.doc("meta/seeded_v2").get().then(function(snap){
+      if (snap.exists) return;
+      var chain = Promise.resolve();
+      ASSET_PATCHES.forEach(function(patch){
+        chain = chain.then(function(){
+          return db.collection("posts").where("title","==",patch.title).get().then(function(qs){
+            var inner = Promise.resolve();
+            qs.docs.forEach(function(d){
+              inner = inner.then(function(){
+                var update = {assetLink: patch.assetLink, updatedAt: Date.now()};
+                if (patch.notes) update.notes = patch.notes;
+                return db.collection("posts").doc(d.id).update(update);
+              });
+            });
+            return inner;
+          });
+        });
+      });
+      SEED_POSTS_V2.forEach(function(p){
+        chain = chain.then(function(){
+          var data = Object.assign({createdAt: Date.now(), updatedAt: Date.now(), sortDate: null}, p);
+          return db.collection("posts").add(data);
+        });
+      });
+      SEED_LIBRARY_V2.forEach(function(item){
+        chain = chain.then(function(){ return db.collection("library").add(item); });
+      });
+      return chain.then(function(){
+        return db.doc("meta/seeded_v2").set({seeded:true, seededAt: Date.now()});
+      });
+    });
+  }
+
+  // v3: patches real asset paths/CDN links onto posts and script cards
+  // seeded by v1/v2 (title-matched, since those documents already
+  // exist), then adds the individual brand-asset + quick-folder
+  // library entries. Same once-only guard pattern as v2.
+  function seedV3IfNeeded(){
+    return db.doc("meta/seeded_v3").get().then(function(snap){
+      if (snap.exists) return;
+      var chain = Promise.resolve();
+      ASSET_PATCHES_V3.forEach(function(patch){
+        chain = chain.then(function(){
+          return db.collection("posts").where("title","==",patch.title).get().then(function(qs){
+            var inner = Promise.resolve();
+            qs.docs.forEach(function(d){
+              inner = inner.then(function(){
+                return db.collection("posts").doc(d.id).update({assetLink: patch.assetLink, updatedAt: Date.now()});
+              });
+            });
+            return inner;
+          });
+        });
+      });
+      LIBRARY_PATCHES_V3.forEach(function(patch){
+        chain = chain.then(function(){
+          return db.collection("library").where("title","==",patch.title).get().then(function(qs){
+            var inner = Promise.resolve();
+            qs.docs.forEach(function(d){
+              inner = inner.then(function(){
+                return db.collection("library").doc(d.id).update({content: patch.content, assetLink: patch.assetLink});
+              });
+            });
+            return inner;
+          });
+        });
+      });
+      SEED_LIBRARY_V3.forEach(function(item){
+        chain = chain.then(function(){ return db.collection("library").add(item); });
+      });
+      return chain.then(function(){
+        return db.doc("meta/seeded_v3").set({seeded:true, seededAt: Date.now()});
+      });
+    });
+  }
+
+  async function boot(){
+    try{
+      db = await window.claude.use("db");
+    } catch(e){ db = null; }
+    if (!db){
+      document.getElementById("loadingMsg").className = "nodb";
+      document.getElementById("loadingMsg").textContent = "This desk needs the db capability enabled for your account to load or save posts.";
+      return;
+    }
+    try{
+      await seedIfNeeded();
+      await seedV2IfNeeded();
+      await seedV3IfNeeded();
+    } catch(e){ /* seeding is best-effort; subscriptions still render whatever exists */ }
+    subscribe();
+  }
+
+  boot();
+})();
+</script>
+
+</body></html>
