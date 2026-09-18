@@ -1,4 +1,4 @@
-# Chill Crew Season One — release schedule (as of 2026-09-17)
+# Chill Crew Season One — release schedule (as of 2026-09-18)
 
 Premiere **Thu Oct 1, 2026, 4 pm** (pushed back twice from Sep 17: +7 on Sep 12, +7 on Sep 17 — owner requests).
 Episodes every Thursday, Shorts every Tuesday (Short N two days before Episode N).
