@@ -115,7 +115,7 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
 
 <div class="wrap">
 <h1>Sanders Learning — story catalog</h1>
-<p class="lede">Every story shipping across the five apps, read from source on 25 July 2026 and verified against the files on disk rather than documentation; the My Brave Friends section was re-read from source on 18 September 2026. Reflects the flagship at <code class="v">mbf-v98</code>.</p>
+<p class="lede">Every story shipping across the five apps, read from source on 25 July 2026 and verified against the files on disk rather than documentation; the My Brave Friends section was re-read from source on 18 September 2026, after story 38 went live. Reflects the flagship at <code class="v">mbf-v100</code>.</p>
 
 <div class="stats">
 <div class="stat"><b>125</b><span>stories total</span></div>
@@ -138,7 +138,6 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
     <button class="f" data-f="acc" data-v="free">Free</button>
     <button class="f" data-f="acc" data-v="paid">Family plan</button>
     <button class="f" data-f="st"  data-v="gated">Gated</button>
-    <button class="f" data-f="st"  data-v="hidden">Hidden</button>
     <button class="f" id="clear">Clear</button>
   </div>
 </div>
@@ -151,7 +150,7 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
       <p class="role">Flagship · SEL for pre-readers</p>
       <p class="src"><a href="https://mybravefriends.com" target="_blank" rel="noopener">mybravefriends.com</a> · <code>inline in index.html</code></p>
     </div>
-    <div class="appcount"><b>39</b><span>4 free · 6 gated · 1 hidden</span></div>
+    <div class="appcount"><b>39</b><span>4 free · 6 gated</span></div>
   </header>
   <p class="rule"><span>applies to 29 of 39</span> PRO paywall: isPremiumStory(id) is true for id &gt;= FREE_STORY_COUNT (4); unlocks with mbf_premium (family plan or license key)</p>
   <div class="tablewrap">
@@ -537,15 +536,15 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
   <td class="acc"><span class="chip paid">plan</span></td>
   <td class="gate"><span class="none">—</span></td>
 </tr>
-<tr data-app="mbf" data-aud="child" data-acc="paid" data-st="hidden"
+<tr data-app="mbf" data-aud="child" data-acc="paid" data-st="live"
    data-q="luna&#x27;s big pause la gran pausa de luna pause pausa it was circle time. ms. rivera held up a picture of a big red apple and asked, &quot;what season do apples grow in?&quot; luna knew the answer right away. her whole body wanted to jump. 38">
   <td class="num">38</td>
   <td class="ico">🙋</td>
   <td class="ttl"><span class="en">Luna&#x27;s Big Pause</span><span class="es">La gran pausa de Luna</span><span class="tag">It was circle time. Ms. Rivera held up a picture of a big red apple and asked, &quot;What season do apples grow in?&quot; Luna knew the answer right away. Her whole body wanted to jump.</span></td>
   <td class="voc"><b>Pause</b><i> · Pausa</i></td>
   <td class="meta"><span class="chip aud-child">child</span></td>
-  <td class="acc"><span class="chip paid">plan</span><span class="chip warn">hidden</span></td>
-  <td class="gate">draft:true in STORY_META (Story Forge story 38, merged to main 18 Sep 2026 with sw mbf-v98) — stripped from every shelf at load in BOTH editions until its 6 stills, 3 clips and 38 narration clips land from the PC and the flag is removed before G3; reviewer preview with localStorage mbf_review_ok='1' | PRO paywall: isPremiumStory(id) is true for id &gt;= FREE_STORY_COUNT (4); unlocks with mbf_premium (family plan or license key)</td>
+  <td class="acc"><span class="chip paid">plan</span></td>
+  <td class="gate"><span class="none">—</span></td>
 </tr></tbody>
   </table>
   </div>
@@ -1486,7 +1485,7 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
   <ul>
     <li><b>Consumer</b> — mybravefriends.com. Stories <b>30, 32, 33</b> are withheld at build time: their prose is absent from the file, replaced by an inert stub that can never be unlocked. Story <b>31</b> ships reframed (a neutral startle variant). Stories <b>34</b> and <b>35</b> are present and unlock through the Grown-ups panel.</li>
     <li><b>Counselor</b> — counselor.mybravefriends.com, password-walled. All 39 stories including the full hardship prose and the trauma-framed original of 31.</li>
-    <li><b>Stories 36–38</b> (added after the July read) ship identically in both editions. Story <b>38</b>, <i>Luna's Big Pause</i>, is wired but carries <code>draft: true</code>, so the load-time review wall strips it from every shelf until its art and narration land; a reviewer sees it with <code>localStorage.mbf_review_ok = '1'</code>.</li>
+    <li><b>Stories 36–38</b> (added after the July read) ship identically in both editions. Story <b>38</b>, <i>Luna's Big Pause</i>, is the first story made through Story Forge; it went live on 18 September 2026 with its art and narration (<code>mbf-v100</code>). No story sits behind the load-time review wall today.</li>
   </ul>
   <p class="axis">The withholding test is <b>“does the story name a threat the child may not know exists”</b> — not “is the topic hard.” That is why 24, 27 and 29 (poverty teasing, food insecurity, housing loss) stay in the consumer build: gating them would put them furthest from the children they were written for.</p>
 </div>
